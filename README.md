@@ -1,2 +1,2 @@
 # OpenGL_Raider
-## André Klarmann e Angelo Fernandes de Oliveira
+### André Klarmann e Angelo Fernandes de Oliveira
