@@ -212,6 +212,9 @@ bool g_UsePerspectiveProjection = true;
 // Variável que controla se o texto informativo será mostrado na tela.
 bool g_ShowInfoText = true;
 
+// Variável que define se a camera está presa ou livre (no caso de primeira pessoa)
+bool camera_presa = true;
+
 // Variáveis que definem um programa de GPU (shaders). Veja função LoadShadersFromFiles().
 GLuint g_GpuProgramID = 0;
 GLint g_model_uniform;
@@ -229,6 +232,7 @@ bool tecla_W_pressionada = false;
 bool tecla_A_pressionada = false;
 bool tecla_S_pressionada = false;
 bool tecla_D_pressionada = false;
+bool tecla_Q_pressionada = false;
 
 //globais para uso da camera livre
 float g_Theta = 3.141592f / 4;
@@ -240,7 +244,7 @@ float y = r*sin(g_CameraPhi);
 float z = r*cos(g_CameraPhi)*cos(g_CameraTheta);
 float x = r*cos(g_CameraPhi)*sin(g_CameraTheta);
 
-glm::vec4 camera_position_c  = glm::vec4(x,y,z,1.0f); // Ponto "c", centro da câmera
+glm::vec4 camera_position_c  = glm::vec4(x,3.0f,z,1.0f); // Ponto "c", centro da câmera
 
 int main(int argc, char* argv[])
 {
@@ -317,6 +321,8 @@ int main(int argc, char* argv[])
 
     // Carregamos duas imagens para serem utilizadas como textura
     LoadTextureImage("../../data/terra.jpg");      // TextureImage0
+    LoadTextureImage("../../data/chao.jpg");      // TextureImage1
+
 
     ObjModel planemodel("../../data/plane.obj");
     ComputeNormals(&planemodel);
@@ -339,7 +345,7 @@ int main(int argc, char* argv[])
     glCullFace(GL_BACK);
     glFrontFace(GL_CCW);
 
-    float speed = 2.0f; // Velocidade da câmera
+    float speed = 5.0f; // Velocidade da câmera
     float prev_time = (float)glfwGetTime();
 
     // Ficamos em um loop infinito, renderizando, até que o usuário feche a janela
@@ -363,19 +369,11 @@ int main(int argc, char* argv[])
         // os shaders de vértice e fragmentos).
         glUseProgram(g_GpuProgramID);
 
-        // Computamos a posição da câmera utilizando coordenadas esféricas.  As
-        // variáveis g_CameraDistance, g_CameraPhi, e g_CameraTheta são
-        // controladas pelo mouse do usuário. Veja as funções CursorPosCallback()
-        // e ScrollCallback().
-        float r = g_CameraDistance;
-        float y = r*sin(g_CameraPhi);
-        float z = r*cos(g_CameraPhi)*cos(g_CameraTheta);
-        float x = r*cos(g_CameraPhi)*sin(g_CameraTheta);
 
         // Abaixo definimos as varáveis que efetivamente definem a câmera virtual.
         // Veja slides 195-227 e 229-234 do documento Aula_08_Sistemas_de_Coordenadas.pdf.
         //glm::vec4 camera_position_c  = glm::vec4(x,y,z,1.0f); // Ponto "c", centro da câmera
-        glm::vec4 camera_lookat_l    = glm::vec4(0.0f,0.0f,0.0f,1.0f); // Ponto "l", para onde a câmera (look-at) estará sempre olhando
+        //glm::vec4 camera_lookat_l    = glm::vec4(0.0f,0.0f,0.0f,1.0f); // Ponto "l", para onde a câmera (look-at) estará sempre olhando
         glm::vec4 camera_view_vector = glm::vec4(cos(g_Phi)*sin(g_Theta), -sin(g_Phi), cos(g_Phi)*cos(g_Theta), 0.0f); // Vetor "view", sentido para onde a câmera está virada
         glm::vec4 camera_up_vector   = glm::vec4(0.0f,1.0f,0.0f,0.0f); // Vetor "up" fixado para apontar para o "céu" (eito Y global)
 
@@ -388,6 +386,10 @@ int main(int argc, char* argv[])
         float delta_t = current_time - prev_time;
         prev_time = current_time;
 
+        if (camera_presa)
+        {
+            camera_position_c[1]= 1.0f; //MANTEM ALTURA DA CAMERA FIXA
+        }
         // Realiza movimentação de objetos
         if (tecla_W_pressionada)
         {
@@ -421,7 +423,7 @@ int main(int argc, char* argv[])
         // Note que, no sistema de coordenadas da câmera, os planos near e far
         // estão no sentido negativo! Veja slides 176-204 do documento Aula_09_Projecoes.pdf.
         float nearplane = -0.1f;  // Posição do "near plane"
-        float farplane  = -50.0f; // Posição do "far plane"
+        float farplane  = -100.0f; // Posição do "far plane"
 
         if (g_UsePerspectiveProjection)
         {
@@ -444,15 +446,9 @@ int main(int argc, char* argv[])
             projection = Matrix_Orthographic(l, r, b, t, nearplane, farplane);
         }
 
+        #define PLANE 0
+        #define CHAO 1
         glm::mat4 model = Matrix_Identity(); // Transformação identidade de modelagem
-
-        // Enviamos as matrizes "view" e "projection" para a placa de vídeo
-        // (GPU). Veja o arquivo "shader_vertex.glsl", onde estas são
-        // efetivamente aplicadas em todos os pontos.
-        glUniformMatrix4fv(g_view_uniform, 1, GL_FALSE, glm::value_ptr(view));
-        glUniformMatrix4fv(g_projection_uniform, 1, GL_FALSE, glm::value_ptr(projection));
-
-#define PLANE 0
 
         // Desenhamos o plano do chão
         model = Matrix_Translate(0.0f,-2.0f,0.0f)
@@ -460,6 +456,70 @@ int main(int argc, char* argv[])
         glUniformMatrix4fv(g_model_uniform, 1, GL_FALSE, glm::value_ptr(model));
         glUniform1i(g_object_id_uniform, PLANE);
         DrawVirtualObject("the_plane");
+
+        // Enviamos as matrizes "view" e "projection" para a placa de vídeo
+        // (GPU). Veja o arquivo "shader_vertex.glsl", onde estas são
+        // efetivamente aplicadas em todos os pontos.
+        glUniformMatrix4fv(g_view_uniform, 1, GL_FALSE, glm::value_ptr(view));
+        glUniformMatrix4fv(g_projection_uniform, 1, GL_FALSE, glm::value_ptr(projection));
+
+
+
+        // Desenhamos o plano do chão
+        //model = Matrix_Translate(0.0f,-2.0f,0.0f)
+        //        * Matrix_Scale(40.0f,5.0f,40.0f);
+        //glUniformMatrix4fv(g_model_uniform, 1, GL_FALSE, glm::value_ptr(model));
+        //glUniform1i(g_object_id_uniform, PLANE);
+        //DrawVirtualObject("the_plane");
+
+        // Vamos desenhar 4 instâncias (cópias) da parede
+        for (int i = 1; i <=4; ++i)
+        {
+            glm::mat4 model = Matrix_Identity();
+
+            if (i == 1)
+            {
+                // Desenhamos o plano da parede OESTE  TESTE OUTRO CHAO?
+                model = Matrix_Translate(0.0f,38.0f,40.0f)
+                        * Matrix_Rotate_X(-3.14/2)
+                        * Matrix_Scale(40.0f,40.0f,40.0f);
+                glUniformMatrix4fv(g_model_uniform, 1, GL_FALSE, glm::value_ptr(model));
+                glUniform1i(g_object_id_uniform, CHAO);
+                DrawVirtualObject("the_plane");
+            }
+            else if ( i == 2 )
+            {
+                // Desenhamos o plano da parede SUL
+                model = Matrix_Translate(-40.0f,38.0f,0.0f)
+                        * Matrix_Rotate_Z(-3.14/2)
+                        * Matrix_Scale(40.0f,40.0f,40.0f);
+                glUniformMatrix4fv(g_model_uniform, 1, GL_FALSE, glm::value_ptr(model));
+                glUniform1i(g_object_id_uniform, CHAO);
+                DrawVirtualObject("the_plane");
+            }
+            else if ( i == 3 )
+            {
+                // Desenhamos o plano da parede LESTE
+                model = Matrix_Translate(0.0f,38.0f,-40.0f)
+                        * Matrix_Rotate_X(3.14/2)
+                        * Matrix_Scale(40.0f,40.0f,40.0f);
+                glUniformMatrix4fv(g_model_uniform, 1, GL_FALSE, glm::value_ptr(model));
+                glUniform1i(g_object_id_uniform, CHAO);
+                DrawVirtualObject("the_plane");
+            }
+            else if (i == 4)
+            {
+                // Desenhamos o plano da parede NORTE
+                model = Matrix_Translate(40.0f,38.0f,0.0f)
+                        * Matrix_Rotate_Z(3.14/2)
+                        * Matrix_Scale(40.0f,40.0f,40.0f);
+                glUniformMatrix4fv(g_model_uniform, 1, GL_FALSE, glm::value_ptr(model));
+                glUniform1i(g_object_id_uniform, CHAO);
+                DrawVirtualObject("the_plane");
+            }
+
+
+        }
 
         // Imprimimos na tela os ângulos de Euler que controlam a rotação do
         // terceiro cubo.
@@ -625,6 +685,7 @@ void LoadShadersFromFiles()
     // Variáveis em "shader_fragment.glsl" para acesso das imagens de textura
     glUseProgram(g_GpuProgramID);
     glUniform1i(glGetUniformLocation(g_GpuProgramID, "TextureImage0"), 0);
+    glUniform1i(glGetUniformLocation(g_GpuProgramID, "TextureImage1"), 1);
     glUseProgram(0);
 }
 
@@ -1284,6 +1345,12 @@ void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mod)
     if (key == GLFW_KEY_H && action == GLFW_PRESS)
     {
         g_ShowInfoText = !g_ShowInfoText;
+    }
+
+    if (key == GLFW_KEY_Q && action == GLFW_PRESS)
+    {
+        camera_presa = !(camera_presa);
+        return;
     }
 
     // Se o usuário apertar a tecla R, recarregamos os shaders dos arquivos "shader_fragment.glsl" e "shader_vertex.glsl".
