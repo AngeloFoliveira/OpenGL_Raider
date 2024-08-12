@@ -322,11 +322,30 @@ int main(int argc, char* argv[])
     // Carregamos duas imagens para serem utilizadas como textura
     LoadTextureImage("../../data/terra.jpg");      // TextureImage0
     LoadTextureImage("../../data/chao.jpg");      // TextureImage1
+    LoadTextureImage("../../data/hands.jpg"); //TextureImage2
+    LoadTextureImage("../../data/pistols.jpg"); //TextureImage3
+    LoadTextureImage("../../data/face.jpg"); //TextureImage4
+    LoadTextureImage("../../data/hair.jpg"); //TextureImage5
+    LoadTextureImage("../../data/body.jpg"); //TextureImage6
+    LoadTextureImage("../../data/coldre.jpg"); //TextureImage7
+
 
 
     ObjModel planemodel("../../data/plane.obj");
     ComputeNormals(&planemodel);
     BuildTrianglesAndAddToVirtualScene(&planemodel);
+
+    /* ObjModel laranewmodel("../../data/lara2013.obj");
+     ComputeNormals(&laranewmodel);
+     BuildTrianglesAndAddToVirtualScene(&laranewmodel);
+    */
+    ObjModel lara1996model("../../data/lara1996.obj");
+    ComputeNormals(&lara1996model);
+    BuildTrianglesAndAddToVirtualScene(&lara1996model);
+
+  //  PrintObjModelInfo(&lara2003model);
+
+
 
     if ( argc > 1 )
     {
@@ -345,7 +364,7 @@ int main(int argc, char* argv[])
     glCullFace(GL_BACK);
     glFrontFace(GL_CCW);
 
-    float speed = 5.0f; // Velocidade da câmera
+    float speed = 8.0f; // Velocidade da câmera
     float prev_time = (float)glfwGetTime();
 
     // Ficamos em um loop infinito, renderizando, até que o usuário feche a janela
@@ -423,7 +442,7 @@ int main(int argc, char* argv[])
         // Note que, no sistema de coordenadas da câmera, os planos near e far
         // estão no sentido negativo! Veja slides 176-204 do documento Aula_09_Projecoes.pdf.
         float nearplane = -0.1f;  // Posição do "near plane"
-        float farplane  = -150.0f; // Posição do "far plane"
+        float farplane  = -300.0f; // Posição do "far plane"
 
         if (g_UsePerspectiveProjection)
         {
@@ -446,16 +465,10 @@ int main(int argc, char* argv[])
             projection = Matrix_Orthographic(l, r, b, t, nearplane, farplane);
         }
 
-        #define PLANE 0
-        #define CHAO 1
+
+
         glm::mat4 model = Matrix_Identity(); // Transformação identidade de modelagem
 
-        // Desenhamos o plano do chão
-        model = Matrix_Translate(0.0f,-2.0f,0.0f)
-                * Matrix_Scale(40.0f,5.0f,40.0f);
-        glUniformMatrix4fv(g_model_uniform, 1, GL_FALSE, glm::value_ptr(model));
-        glUniform1i(g_object_id_uniform, PLANE);
-        DrawVirtualObject("the_plane");
 
         // Enviamos as matrizes "view" e "projection" para a placa de vídeo
         // (GPU). Veja o arquivo "shader_vertex.glsl", onde estas são
@@ -463,14 +476,28 @@ int main(int argc, char* argv[])
         glUniformMatrix4fv(g_view_uniform, 1, GL_FALSE, glm::value_ptr(view));
         glUniformMatrix4fv(g_projection_uniform, 1, GL_FALSE, glm::value_ptr(projection));
 
+#define PLANE 0
+#define CHAO 1
+#define MAOSLARAVELHA 2
+#define PISTOLASLARAVELHA 3
+#define ROSTOLARAVELHA 4
+#define CABELOLARAVELHA 5
+#define CORPOLARAVELHA 6 //???
+#define COLDRELARAVELHA 7
+//#define RABOLARAVELHA 8
+
+#define ESCALALARAVELHA 2
+//#define LARAATUAL 3
 
 
         // Desenhamos o plano do chão
-        //model = Matrix_Translate(0.0f,-2.0f,0.0f)
-        //        * Matrix_Scale(40.0f,5.0f,40.0f);
-        //glUniformMatrix4fv(g_model_uniform, 1, GL_FALSE, glm::value_ptr(model));
-        //glUniform1i(g_object_id_uniform, PLANE);
-        //DrawVirtualObject("the_plane");
+        model = Matrix_Translate(0.0f,-2.0f,0.0f)
+                * Matrix_Scale(80.0f,5.0f,80.0f);
+        glUniformMatrix4fv(g_model_uniform, 1, GL_FALSE, glm::value_ptr(model));
+        glUniform1i(g_object_id_uniform, PLANE);
+        DrawVirtualObject("the_plane");
+
+
 
         // Vamos desenhar 4 instâncias (cópias) da parede
         for (int i = 1; i <=4; ++i)
@@ -480,9 +507,9 @@ int main(int argc, char* argv[])
             if (i == 1)
             {
                 // Desenhamos o plano da parede OESTE  TESTE OUTRO CHAO?
-                model = Matrix_Translate(0.0f,38.0f,40.0f)
+                model = Matrix_Translate(0.0f,38.0f,80.0f)
                         * Matrix_Rotate_X(-3.14/2)
-                        * Matrix_Scale(40.0f,40.0f,40.0f);
+                        * Matrix_Scale(80.0f,20.0f,80.0f);
                 glUniformMatrix4fv(g_model_uniform, 1, GL_FALSE, glm::value_ptr(model));
                 glUniform1i(g_object_id_uniform, CHAO);
                 DrawVirtualObject("the_plane");
@@ -490,9 +517,9 @@ int main(int argc, char* argv[])
             else if ( i == 2 )
             {
                 // Desenhamos o plano da parede SUL
-                model = Matrix_Translate(-40.0f,38.0f,0.0f)
+                model = Matrix_Translate(-80.0f,38.0f,0.0f)
                         * Matrix_Rotate_Z(-3.14/2)
-                        * Matrix_Scale(40.0f,40.0f,40.0f);
+                        * Matrix_Scale(80.0f,20.0f,80.0f);
                 glUniformMatrix4fv(g_model_uniform, 1, GL_FALSE, glm::value_ptr(model));
                 glUniform1i(g_object_id_uniform, CHAO);
                 DrawVirtualObject("the_plane");
@@ -500,9 +527,9 @@ int main(int argc, char* argv[])
             else if ( i == 3 )
             {
                 // Desenhamos o plano da parede LESTE
-                model = Matrix_Translate(0.0f,38.0f,-40.0f)
+                model = Matrix_Translate(0.0f,38.0f,-80.0f)
                         * Matrix_Rotate_X(3.14/2)
-                        * Matrix_Scale(40.0f,40.0f,40.0f);
+                        * Matrix_Scale(80.0f,20.0f,80.0f);
                 glUniformMatrix4fv(g_model_uniform, 1, GL_FALSE, glm::value_ptr(model));
                 glUniform1i(g_object_id_uniform, CHAO);
                 DrawVirtualObject("the_plane");
@@ -510,16 +537,69 @@ int main(int argc, char* argv[])
             else if (i == 4)
             {
                 // Desenhamos o plano da parede NORTE
-                model = Matrix_Translate(40.0f,38.0f,0.0f)
+                model = Matrix_Translate(80.0f,38.0f,0.0f)
                         * Matrix_Rotate_Z(3.14/2)
-                        * Matrix_Scale(40.0f,40.0f,40.0f);
+                        * Matrix_Scale(80.0f,20.0f,80.0f);
                 glUniformMatrix4fv(g_model_uniform, 1, GL_FALSE, glm::value_ptr(model));
                 glUniform1i(g_object_id_uniform, CHAO);
                 DrawVirtualObject("the_plane");
             }
-
-
         }
+
+        // Desenhamos a LARA 2003 no chão
+        model = Matrix_Translate(1.0f,1.0f,0.0f)
+                *Matrix_Scale(ESCALALARAVELHA,ESCALALARAVELHA,ESCALALARAVELHA);
+        glUniformMatrix4fv(g_model_uniform, 1, GL_FALSE, glm::value_ptr(model));
+        glUniform1i(g_object_id_uniform, MAOSLARAVELHA);
+        DrawVirtualObject("the_hands");
+
+
+        model = Matrix_Translate(1.0f,1.0f,0.0f)
+                *Matrix_Scale(ESCALALARAVELHA,ESCALALARAVELHA,ESCALALARAVELHA);
+        glUniformMatrix4fv(g_model_uniform, 1, GL_FALSE, glm::value_ptr(model));
+        glUniform1i(g_object_id_uniform, PISTOLASLARAVELHA);
+        DrawVirtualObject("the_pistols");
+
+        model = Matrix_Translate(1.0f,1.0f,0.0f)
+                *Matrix_Scale(ESCALALARAVELHA,ESCALALARAVELHA,ESCALALARAVELHA);
+        glUniformMatrix4fv(g_model_uniform, 1, GL_FALSE, glm::value_ptr(model));
+        glUniform1i(g_object_id_uniform, CABELOLARAVELHA);
+        DrawVirtualObject("the_hair");
+
+        model = Matrix_Translate(1.0f,1.0f,0.0f)
+                *Matrix_Scale(ESCALALARAVELHA,ESCALALARAVELHA,ESCALALARAVELHA);
+        glUniformMatrix4fv(g_model_uniform, 1, GL_FALSE, glm::value_ptr(model));
+        glUniform1i(g_object_id_uniform, CORPOLARAVELHA);
+        DrawVirtualObject("the_body");
+
+        model = Matrix_Translate(1.0f,1.0f,0.0f)
+                *Matrix_Scale(ESCALALARAVELHA,ESCALALARAVELHA,ESCALALARAVELHA);
+        glUniformMatrix4fv(g_model_uniform, 1, GL_FALSE, glm::value_ptr(model));
+        glUniform1i(g_object_id_uniform, ROSTOLARAVELHA);
+        DrawVirtualObject("the_face");
+
+        model = Matrix_Translate(1.0f,1.0f,0.0f)
+                *Matrix_Scale(ESCALALARAVELHA,ESCALALARAVELHA,ESCALALARAVELHA);
+        glUniformMatrix4fv(g_model_uniform, 1, GL_FALSE, glm::value_ptr(model));
+        glUniform1i(g_object_id_uniform, COLDRELARAVELHA);
+        DrawVirtualObject("the_coldre");
+
+        /*
+        model = Matrix_Translate(1.0f,1.0f,0.0f)
+                *Matrix_Scale(ESCALALARAVELHA,ESCALALARAVELHA,ESCALALARAVELHA);
+        glUniformMatrix4fv(g_model_uniform, 1, GL_FALSE, glm::value_ptr(model));
+        glUniform1i(g_object_id_uniform, RABOLARAVELHA);
+        DrawVirtualObject("the_lara_pony");
+*/
+
+
+        /*    // Desenhamos a LARA 2013 no chão
+            model = Matrix_Translate(-10.0f,5.0f,-10.0f);
+            glUniformMatrix4fv(g_model_uniform, 1, GL_FALSE, glm::value_ptr(model));
+            glUniform1i(g_object_id_uniform, LARAATUAL);
+            DrawVirtualObject("the_lara2013");
+        */
+
 
         // Imprimimos na tela os ângulos de Euler que controlam a rotação do
         // terceiro cubo.
@@ -581,8 +661,8 @@ void LoadTextureImage(const char* filename)
     glGenSamplers(1, &sampler_id);
 
     // Veja slides 95-96 do documento Aula_20_Mapeamento_de_Texturas.pdf
-    glSamplerParameteri(sampler_id, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glSamplerParameteri(sampler_id, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glSamplerParameteri(sampler_id, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glSamplerParameteri(sampler_id, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 
     // Parâmetros de amostragem da textura.
     glSamplerParameteri(sampler_id, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
@@ -686,6 +766,13 @@ void LoadShadersFromFiles()
     glUseProgram(g_GpuProgramID);
     glUniform1i(glGetUniformLocation(g_GpuProgramID, "TextureImage0"), 0);
     glUniform1i(glGetUniformLocation(g_GpuProgramID, "TextureImage1"), 1);
+    glUniform1i(glGetUniformLocation(g_GpuProgramID, "TextureImage2"), 2);
+    glUniform1i(glGetUniformLocation(g_GpuProgramID, "TextureImage3"), 3);
+    glUniform1i(glGetUniformLocation(g_GpuProgramID, "TextureImage4"), 4);
+    glUniform1i(glGetUniformLocation(g_GpuProgramID, "TextureImage5"), 5);
+    glUniform1i(glGetUniformLocation(g_GpuProgramID, "TextureImage6"), 6);
+    glUniform1i(glGetUniformLocation(g_GpuProgramID, "TextureImage7"), 7);
+
     glUseProgram(0);
 }
 
