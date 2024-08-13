@@ -1,0 +1,3 @@
+C:/Users/angel/Downloads/OpenGL_Raider/build/CMakeFiles/main.dir
+C:/Users/angel/Downloads/OpenGL_Raider/build/CMakeFiles/edit_cache.dir
+C:/Users/angel/Downloads/OpenGL_Raider/build/CMakeFiles/rebuild_cache.dir

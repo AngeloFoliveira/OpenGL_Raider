@@ -564,7 +564,9 @@ int main(int argc, char* argv[])
                 *Matrix_Scale(ESCALALARAVELHA,ESCALALARAVELHA,ESCALALARAVELHA);
         glUniformMatrix4fv(g_model_uniform, 1, GL_FALSE, glm::value_ptr(model));
         glUniform1i(g_object_id_uniform, CABELOLARAVELHA);
-        DrawVirtualObject("the_hair");
+        DrawVirtualObject("the_hair");    
+
+        
 
         model = Matrix_Translate(1.0f,1.0f,0.0f)
                 *Matrix_Scale(ESCALALARAVELHA,ESCALALARAVELHA,ESCALALARAVELHA);

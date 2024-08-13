@@ -156,17 +156,19 @@ void main()
         Ka = vec3(0.0,0.0,0.0);
         q = 9.84916;
     }
-    if ((object_id == MAOSLARAVELHA)||(object_id == CABELOLARAVELHA)) //n funciona ainda (perna/braço e cabelo)
+
+    if ((object_id == MAOSLARAVELHA)||(object_id == CABELOLARAVELHA))
     {
         U = texcoords.x;
         V = texcoords.y;
 
-        Kd = vec3(0.698039, 0.698039, 0.698039);
-        Ks = vec3(0.0,0.0,0.0);
-        Ka = vec3(0.0,0.0,0.0);
-        q = 9.84916;
-    }
+        Kd = vec3(0.0,0.0,0.0);
+        Ks = vec3(0.5,0.5,0.5);
+        Ka = vec3(1.0,1.0,11.0);
+        q = 10;
 
+    }
+   
 
 
 
