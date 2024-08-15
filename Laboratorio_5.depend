@@ -3795,3 +3795,68 @@
 	<glm/vec4.hpp>
 	<glm/gtc/matrix_transform.hpp>
 
+1723322203 source:c:\users\angel\downloads\opengl_raider\src\glad.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+	<glad/glad.h>
+	<windows.h>
+	<dlfcn.h>
+
+1723322073 c:\users\angel\downloads\opengl_raider\include\glad\glad.h
+	<windows.h>
+	<stddef.h>
+	<KHR/khrplatform.h>
+	<inttypes.h>
+	<inttypes.h>
+	<inttypes.h>
+	<stdint.h>
+	<stdint.h>
+	<inttypes.h>
+
+1723322072 c:\users\angel\downloads\opengl_raider\include\khr\khrplatform.h
+	<sys/cdefs.h>
+	<stdint.h>
+	<inttypes.h>
+	<stdint.h>
+
+1723322205 source:c:\users\angel\downloads\opengl_raider\src\stb_image.cpp
+	"stb_image.h"
+
+1723322071 c:\users\angel\downloads\opengl_raider\include\stb_image.h
+	"stb_image.h"
+	<stdio.h>
+	<stdarg.h>
+	<stddef.h>
+	<stdlib.h>
+	<string.h>
+	<limits.h>
+	<math.h>
+	<stdio.h>
+	<assert.h>
+	<stdint.h>
+	<emmintrin.h>
+	<intrin.h>
+	<arm_neon.h>
+
+1723322205 source:c:\users\angel\downloads\opengl_raider\src\tiny_obj_loader.cpp
+	"tiny_obj_loader.h"
+
+1723322071 c:\users\angel\downloads\opengl_raider\include\tiny_obj_loader.h
+	<map>
+	<string>
+	<vector>
+	<cassert>
+	<cctype>
+	<cmath>
+	<cstddef>
+	<cstdlib>
+	<cstring>
+	<fstream>
+	<limits>
+	<set>
+	<sstream>
+	<utility>
+	<array>
+	"mapbox/earcut.hpp"
+

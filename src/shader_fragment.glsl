@@ -27,6 +27,7 @@ uniform mat4 projection;
 #define CABELOLARAVELHA 5
 #define CORPOLARAVELHA 6 //???
 #define COLDRELARAVELHA 7
+#define MURO 8
 
 //#define LARAATUAL 999
 
@@ -46,7 +47,7 @@ uniform sampler2D TextureImage4;
 uniform sampler2D TextureImage5;
 uniform sampler2D TextureImage6;
 uniform sampler2D TextureImage7;
-
+uniform sampler2D TextureImage8;
 
 
 // O valor de saída ("out") de um Fragment Shader é a cor final do fragmento.
@@ -75,9 +76,9 @@ void main()
     vec4 n = normalize(normal);
 
     // Fonte de luz (ponto)
-    vec4 l2 = vec4(0.0f,50.0f,0.0f,1.0f); //CERTO
+    vec4 l2 = vec4(0.0f,100.0f,0.0f,1.0f); //CERTO
 
-    vec4 ponto_v = vec4(0.0,-1.0,0.0,1.0); //CERTO
+    vec4 ponto_v = vec4(0.0,0.0,0.0,1.0); //CERTO
 
     vec4 v2 = ponto_v-l2;
 
@@ -105,6 +106,15 @@ void main()
     float V = 0.0;
 
 
+if ( object_id == MURO)
+    {
+        U = texcoords.x;
+        V = texcoords.y;
+        Kd = vec3(1,1,1);
+        Ks = vec3(1,1,1);
+        Ka = vec3(1,1,1);
+        q = 20.0;
+    }
     if ( object_id == CHAO)
     {
         U = texcoords.x;
@@ -149,7 +159,7 @@ void main()
     if (object_id == ROSTOLARAVELHA)
     {
         U = texcoords.x;
-        V = texcoords.y + 1;
+        V = texcoords.y;
 
         Kd = vec3(0.698039, 0.698039, 0.698039);
         Ks = vec3(0.0,0.0,0.0);
@@ -198,6 +208,7 @@ void main()
     vec3 Kd5 = texture(TextureImage5, vec2(U,V)).rgb;
     vec3 Kd6 = texture(TextureImage6, vec2(U,V)).rgb;
     vec3 Kd7 = texture(TextureImage7, vec2(U,V)).rgb;
+    vec3 Kd8 = texture(TextureImage8, vec2(U,V)).rgb;
 
     // Equação de Iluminação
     float lambert = max(0,dot(n,l));
@@ -221,6 +232,8 @@ void main()
                             color.rgb = Kd6 * (lambert + 0.01);
                             else if (object_id == COLDRELARAVELHA)
                                 color.rgb = Kd7 * (lambert + 0.01);
+                                else if (object_id == MURO)
+                                color.rgb = Kd8;
 
                                 else
                                     color.rgb = ambient_term;

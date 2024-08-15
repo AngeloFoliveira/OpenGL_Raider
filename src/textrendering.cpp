@@ -95,6 +95,10 @@ void TextRendering_Init()
     glGenVertexArrays(1, &textVAO);
     glGenTextures(1, &texttexture_id);
     glGenSamplers(1, &sampler);
+    glTexParameteri(texttexture_id, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(texttexture_id, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(texttexture_id, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(texttexture_id, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glSamplerParameteri(sampler, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glSamplerParameteri(sampler, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     glSamplerParameteri(sampler, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
