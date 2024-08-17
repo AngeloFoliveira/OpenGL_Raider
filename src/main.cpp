@@ -697,7 +697,7 @@ int main(int argc, char *argv[])
         glUniformMatrix4fv(g_model_uniform, 1, GL_FALSE, glm::value_ptr(model));
         glUniform1i(g_object_id_uniform, CORPOLARAVELHA);
         DrawVirtualObject("the_body");
-
+        
         model = Matrix_Translate(camera_view_vector[0] + camera_position_c[0] - 10, 2.0f, camera_view_vector[2] + camera_position_c[2]) * Matrix_Scale(ESCALALARAVELHA, ESCALALARAVELHA, ESCALALARAVELHA)*Matrix_Rotate_Y(camera_view_vector[2]);
         glUniformMatrix4fv(g_model_uniform, 1, GL_FALSE, glm::value_ptr(model));
         glUniform1i(g_object_id_uniform, ROSTOLARAVELHA);
@@ -708,6 +708,16 @@ int main(int argc, char *argv[])
         glUniform1i(g_object_id_uniform, COLDRELARAVELHA);
         DrawVirtualObject("the_coldre");
 
+        // glm::vec3 bbox_min = g_VirtualScene["the_body"].bbox_min;
+        // glm::vec3 bbox_max = g_VirtualScene["the_body"].bbox_max;
+        // glm::vec3 bbox_maxC= g_VirtualScene["the_cube"].bbox_max;
+        //  glm::vec3 bbox_minC= g_VirtualScene["the_cube"].bbox_min;
+    //     if( (bbox_min.x <= bbox_maxC.x && bbox_max.x >= bbox_minC.x) &&
+    //        (bbox_min.y <= bbox_maxC.y && bbox_max.y >= bbox_minC.y) &&
+    //        (bbox_min.z <= bbox_maxC.z && bbox_max.z >= bbox_minC.z)){
+    //       
+    //     
+    // };
         // Imprimimos na tela os ângulos de Euler que controlam a rotação do
         // terceiro cubo.
         TextRendering_ShowEulerAngles(window);
@@ -1638,13 +1648,17 @@ void TextRendering_ShowEulerAngles(GLFWwindow *window)
     if (!g_ShowInfoText)
         return;
 
-    float pad = TextRendering_LineHeight(window);
+    float pad = TextRendering_LineHeight(window)+ 5;
 
     char buffer[80];
-    snprintf(buffer, 80, "Euler Angles rotation matrix = Z(%.2f)*Y(%.2f)*X(%.2f)\n", g_AngleZ, g_AngleY, g_AngleX);
+    snprintf(buffer, 80, "__");
 
-    TextRendering_PrintString(window, buffer, -1.0f + pad / 10, -1.0f + 2 * pad / 10, 1.0f);
+    TextRendering_PrintString(window, buffer, -1.0f + pad / 5, -1.0f + 2 * pad / 9.78, 1.2f);
+    snprintf(buffer, 80,"|");
+    TextRendering_PrintString(window, buffer, -1.0f + pad / 4.93, -1.0f + 2 * pad / 10, 1.1f);
 }
+
+
 
 // Escrevemos na tela qual matriz de projeção está sendo utilizada.
 void TextRendering_ShowProjection(GLFWwindow *window)
@@ -1656,7 +1670,7 @@ void TextRendering_ShowProjection(GLFWwindow *window)
     float charwidth = TextRendering_CharWidth(window);
 
     if (g_UsePerspectiveProjection)
-        TextRendering_PrintString(window, "Perspective", 1.0f - 13 * charwidth, -1.0f + 2 * lineheight / 10, 1.0f);
+        TextRendering_PrintString(window, "Perspective", 1.0f - 13 * charwidth, -1.0f + 2 * lineheight / 5, 1.0f);
     else
         TextRendering_PrintString(window, "Orthographic", 1.0f - 13 * charwidth, -1.0f + 2 * lineheight / 10, 1.0f);
 }
@@ -1697,7 +1711,7 @@ void TextRendering_ShowFramesPerSecond(GLFWwindow *window)
     TextRendering_PrintString(window, buffer, 1.0f - (numchars + 1) * charwidth, 1.0f - lineheight, 1.0f);
 }
 
-// Função para debugging: imprime no terminal todas informações de um modelo
+
 // geométrico carregado de um arquivo ".obj".
 // Veja: https://github.com/syoyo/tinyobjloader/blob/22883def8db9ef1f3ffb9b404318e7dd25fdbb51/loader_example.cc#L98
 void PrintObjModelInfo(ObjModel *model)
