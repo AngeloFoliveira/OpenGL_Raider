@@ -678,32 +678,32 @@ int main(int argc, char *argv[])
         }
 
         // Desenhamos a LARA 2003 no chão
-        model = Matrix_Translate(camera_view_vector[0] + camera_position_c[0] - 10, 2.0f, camera_view_vector[2] + camera_position_c[2]) * Matrix_Scale(ESCALALARAVELHA, ESCALALARAVELHA, ESCALALARAVELHA);
+        model = Matrix_Translate(camera_view_vector[0] + camera_position_c[0] - 10, 2.0f, camera_view_vector[2] + camera_position_c[2]) * Matrix_Scale(ESCALALARAVELHA, ESCALALARAVELHA, ESCALALARAVELHA)*Matrix_Rotate_Y(camera_view_vector[2]);
         glUniformMatrix4fv(g_model_uniform, 1, GL_FALSE, glm::value_ptr(model));
         glUniform1i(g_object_id_uniform, MAOSLARAVELHA);
         DrawVirtualObject("the_hands");
 
-        model = Matrix_Translate(camera_view_vector[0] + camera_position_c[0] - 10, 2.0f, camera_view_vector[2] + camera_position_c[2]) * Matrix_Scale(ESCALALARAVELHA, ESCALALARAVELHA, ESCALALARAVELHA);
+        model = Matrix_Translate(camera_view_vector[0] + camera_position_c[0] - 10, 2.0f, camera_view_vector[2] + camera_position_c[2]) * Matrix_Scale(ESCALALARAVELHA, ESCALALARAVELHA, ESCALALARAVELHA)*Matrix_Rotate_Y(camera_view_vector[2]);
         glUniformMatrix4fv(g_model_uniform, 1, GL_FALSE, glm::value_ptr(model));
         glUniform1i(g_object_id_uniform, PISTOLASLARAVELHA);
         DrawVirtualObject("the_pistols");
 
-        model = Matrix_Translate(camera_view_vector[0] + camera_position_c[0] - 10, 2.0f, camera_view_vector[2] + camera_position_c[2]) * Matrix_Scale(ESCALALARAVELHA, ESCALALARAVELHA, ESCALALARAVELHA);
+        model = Matrix_Translate(camera_view_vector[0] + camera_position_c[0] - 10, 2.0f, camera_view_vector[2] + camera_position_c[2]) * Matrix_Scale(ESCALALARAVELHA, ESCALALARAVELHA, ESCALALARAVELHA)*Matrix_Rotate_Y(camera_view_vector[2]);
         glUniformMatrix4fv(g_model_uniform, 1, GL_FALSE, glm::value_ptr(model));
         glUniform1i(g_object_id_uniform, CABELOLARAVELHA);
         DrawVirtualObject("the_hair");
 
-        model = Matrix_Translate(camera_view_vector[0] + camera_position_c[0] - 10, 2.0f, camera_view_vector[2] + camera_position_c[2]) * Matrix_Scale(ESCALALARAVELHA, ESCALALARAVELHA, ESCALALARAVELHA);
+        model = Matrix_Translate(camera_view_vector[0] + camera_position_c[0] - 10, 2.0f, camera_view_vector[2] + camera_position_c[2]) * Matrix_Scale(ESCALALARAVELHA, ESCALALARAVELHA, ESCALALARAVELHA)*Matrix_Rotate_Y(camera_view_vector[2]);
         glUniformMatrix4fv(g_model_uniform, 1, GL_FALSE, glm::value_ptr(model));
         glUniform1i(g_object_id_uniform, CORPOLARAVELHA);
         DrawVirtualObject("the_body");
 
-        model = Matrix_Translate(camera_view_vector[0] + camera_position_c[0] - 10, 2.0f, camera_view_vector[2] + camera_position_c[2]) * Matrix_Scale(ESCALALARAVELHA, ESCALALARAVELHA, ESCALALARAVELHA);
+        model = Matrix_Translate(camera_view_vector[0] + camera_position_c[0] - 10, 2.0f, camera_view_vector[2] + camera_position_c[2]) * Matrix_Scale(ESCALALARAVELHA, ESCALALARAVELHA, ESCALALARAVELHA)*Matrix_Rotate_Y(camera_view_vector[2]);
         glUniformMatrix4fv(g_model_uniform, 1, GL_FALSE, glm::value_ptr(model));
         glUniform1i(g_object_id_uniform, ROSTOLARAVELHA);
         DrawVirtualObject("the_face");
 
-        model = Matrix_Translate(camera_view_vector[0] + camera_position_c[0] - 10, 2.0f, camera_view_vector[2] + camera_position_c[2]) * Matrix_Scale(ESCALALARAVELHA, ESCALALARAVELHA, ESCALALARAVELHA);
+        model = Matrix_Translate(camera_view_vector[0] + camera_position_c[0] - 10, 2.0f, camera_view_vector[2] + camera_position_c[2]) * Matrix_Scale(ESCALALARAVELHA, ESCALALARAVELHA, ESCALALARAVELHA)*Matrix_Rotate_Y(camera_view_vector[2]);
         glUniformMatrix4fv(g_model_uniform, 1, GL_FALSE, glm::value_ptr(model));
         glUniform1i(g_object_id_uniform, COLDRELARAVELHA);
         DrawVirtualObject("the_coldre");
