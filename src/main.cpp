@@ -151,6 +151,8 @@ void MouseButtonCallback(GLFWwindow *window, int button, int action, int mods);
 void CursorPosCallback(GLFWwindow *window, double xpos, double ypos);
 void ScrollCallback(GLFWwindow *window, double xoffset, double yoffset);
 
+
+
 // Definimos uma estrutura que armazenará dados necessários para renderizar
 // cada objeto da cena virtual.
 struct SceneObject
@@ -232,13 +234,27 @@ bool tecla_A_pressionada = false;
 bool tecla_S_pressionada = false;
 bool tecla_D_pressionada = false;
 bool tecla_Q_pressionada = false;
-
+bool tecla_Enter_pressionada= false;
 // globais para uso da camera livre
 float g_Theta = 3.141592f / 4;
 float g_Phi = 3.141592f / 6;
 float xl = 0.0;
 float yl = 0.0;
 float zl = 0.0;
+
+//
+glm::vec3 bezierQuadratic(float t, const glm::vec3& p0, const glm::vec3& p1, const glm::vec3& p2) {
+    float u = 1 - t;
+    float tq = t * t;
+    float uq = u * u;
+    glm::vec3 p = uq * p0;
+    p += 2 * u * t * p1;   
+    p += tq * p2;
+    tecla_Enter_pressionada=false;
+    return p;
+}
+
+
 
 glm::vec4 camera_position_c = glm::vec4(75.0f, 5.0f, 75.0f, 1.0f); // Ponto "c", centro da câmera
 
@@ -410,6 +426,7 @@ int main(int argc, char *argv[])
 
         // Definimos a cor do "fundo" do framebuffer como branco.  Tal cor é
         // definida como coeficientes RGBA: Red, Green, Blue, Alpha; isto é:
+
         // Vermelho, Verde, Azul, Alpha (valor de transparência).
         // Conversaremos sobre sistemas de cores nas aulas de Modelos de Iluminação.
         //
@@ -666,13 +683,22 @@ int main(int argc, char *argv[])
         glUniformMatrix4fv(g_model_uniform, 1, GL_FALSE, glm::value_ptr(model));
         glUniform1i(g_object_id_uniform, ESTATUA);
         DrawVirtualObject("estatua");
-          
-        model= Matrix_Translate(-65.0f, 1.0f, 55.0f) * Matrix_Rotate_X(-3.14 / 2) * Matrix_Scale(.2f, .2f, .2f);
+     
+    if(tecla_Enter_pressionada){
+        glm::vec3 p0(xl, yl, zl);
+        glm::vec3 p1(xl, yl-0.5f, zl+5.0f);
+        glm::vec3 p2(xl, yl-1.0, zl+10.0f);
+        float current_time = (float)glfwGetTime();
+        float mov=+current_time*1.5;
+        float move=fmod(mov,1.0);
+        glm::vec3 position = bezierQuadratic(move, p0, p1, p2);
+        model= Matrix_Translate(position.x,position.y,position.z*camera_view_vector[2]) * Matrix_Rotate_X(-3.14 / 2) * Matrix_Scale(.2f, .2f, .2f);
         glUniformMatrix4fv(g_model_uniform,1,GL_FALSE,glm::value_ptr(model));
         glUniform1i(g_object_id_uniform,ARROW1);
         DrawVirtualObject("object_0");
-  
+     
 
+    }
         
     // DESENHA MODELO ATUAL (lara2013)
         for (int i = 12; i < 36; i++)
@@ -1783,7 +1809,9 @@ void KeyCallback(GLFWwindow *window, int key, int scancode, int action, int mod)
         g_TorsoPositionX = 0.0f;
         g_TorsoPositionY = 0.0f;
     }
-
+    if(key == GLFW_KEY_ENTER && action == GLFW_REPEAT){
+      tecla_Enter_pressionada= true;
+  }
     // Se o usuário apertar a tecla P, utilizamos projeção perspectiva.
     if (key == GLFW_KEY_P && action == GLFW_PRESS)
     {
@@ -1950,7 +1978,6 @@ void TextRendering_ShowFramesPerSecond(GLFWwindow *window)
 
     TextRendering_PrintString(window, buffer, 1.0f - (numchars + 1) * charwidth, 1.0f - lineheight, 1.0f);
 }
-
 // geométrico carregado de um arquivo ".obj".
 // Veja: https://github.com/syoyo/tinyobjloader/blob/22883def8db9ef1f3ffb9b404318e7dd25fdbb51/loader_example.cc#L98
 void PrintObjModelInfo(ObjModel *model)
