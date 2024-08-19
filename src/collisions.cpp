@@ -4,70 +4,82 @@
 namespace collisions
 {
 
-    bool checkCollision(const Cylinder &cylinder, const Sphere &sphere)
+    bool checkCollisionCubePlane(CUBE &cube, PLANe &plane)
     {
+        // Checar se o plano colide com o cubo
+        glm::vec4 vertices[8] = {
+            cube.min,
+            glm::vec4(cube.max.x, cube.min.y, cube.min.z, 1.0f),
+            glm::vec4(cube.min.x, cube.max.y, cube.min.z, 1.0f),
+            glm::vec4(cube.min.x, cube.min.y, cube.max.z, 1.0f),
+            glm::vec4(cube.max.x, cube.max.y, cube.min.z, 1.0f),
+            glm::vec4(cube.min.x, cube.max.y, cube.max.z, 1.0f),
+            glm::vec4(cube.max.x, cube.min.y, cube.max.z, 1.0f),
+            cube.max};
 
-        float minCylinderHeight = cylinder.center.y - cylinder.height / 2;
-        float maxCylinderHeight = cylinder.center.y + cylinder.height / 2;
-        float distanceFromAxis = pow(cylinder.center.x - sphere.center.x, 2) + pow(cylinder.center.z - sphere.center.z, 2);
-        float distanceSquared;
-
-        if (sphere.center.y >= minCylinderHeight && sphere.center.y <= maxCylinderHeight)
+        int front = 0, back = 0;
+        for (int i = 0; i < 8; i++)
         {
-            distanceSquared = distanceFromAxis;
-        }
-        else if (sphere.center.y < minCylinderHeight)
-        {
-            distanceSquared = distance(sphere.center, (cylinder.center - glm::vec4{0, cylinder.height / 2, 0, 0}));
-        }
-        else
-        {
-            distanceSquared = distance(sphere.center, (cylinder.center + glm::vec4{0, cylinder.height / 2, 0, 0}));
+            glm::vec4 vectorToPoint = vertices[i] - plane.point;
+            float distance = dotproduct(plane.normal, vectorToPoint);
+            if (distance > 0)
+                front++;
+            else if (distance < 0)
+                back++;
         }
 
-        float radiusSum = sphere.radius + cylinder.radius;
-        return distanceSquared <= (radiusSum * radiusSum);
+        // Se há vértices na frente e atrás do plano, há colisão
+        return front > 0 && back > 0;
     }
 
-    bool checkCollision(const Cylinder &cylinder1, const Cylinder &cylinder2)
+    bool checkCollisionWithWalls(CUBE &lara1996)
     {
-        // Verifica se as alturas dos cilindros se sobrepõem
-        float minHeight1 = cylinder1.center.y - cylinder1.height / 2;
-        float maxHeight1 = cylinder1.center.y + cylinder1.height / 2;
-        float minHeight2 = cylinder2.center.y - cylinder2.height / 2;
-        float maxHeight2 = cylinder2.center.y + cylinder2.height / 2;
+        // Definição das paredes
+        PLANe planeWest = {glm::vec4(0.0f, 78.0f, 80.0f, 1.0f), glm::vec4(0.0f, 0.0f, -1.0f, 0.0f)};  // Oeste
+        PLANe planeSouth = {glm::vec4(-80.0f, 78.0f, 0.0f, 1.0f), glm::vec4(1.0f, 0.0f, 0.0f, 0.0f)}; // Sul
+        PLANe planeEast = {glm::vec4(0.0f, 78.0f, -80.0f, 1.0f), glm::vec4(0.0f, 0.0f, 1.0f, 0.0f)};  // Leste
+        PLANe planeNorth = {glm::vec4(80.0f, 78.0f, 0.0f, 1.0f), glm::vec4(-1.0f, 0.0f, 0.0f, 0.0f)}; // Norte
 
-        bool heightOverlap = (minHeight1 <= maxHeight2 && maxHeight1 >= minHeight2);
-
-        // Calcula a distância ao quadrado entre os centros dos cilindros no plano XZ
-        float distanceFromAxisSquared = pow(cylinder1.center.x - cylinder2.center.x, 2) + pow(cylinder1.center.z - cylinder2.center.z, 2);
-
-        // Soma dos raios dos cilindros
-        float radiusSum = cylinder1.radius + cylinder2.radius;
-
-        // Verifica se a distância ao quadrado entre os centros é menor ou igual ao quadrado da soma dos raios
-        bool baseOverlap = distanceFromAxisSquared <= (radiusSum * radiusSum);
-
-        // A colisão ocorre se houver sobreposição tanto na altura quanto na base
-        return heightOverlap && baseOverlap;
+        // Testa colisão com cada uma das paredes
+        if (checkCollisionCubePlane(lara1996, planeWest) ||
+            checkCollisionCubePlane(lara1996, planeSouth) ||
+            checkCollisionCubePlane(lara1996, planeEast) ||
+            checkCollisionCubePlane(lara1996, planeNorth))
+        {
+            return true;
+        }
+        return false;
     }
 
+    bool checkCollisionCubeSphere(CUBE &cube, SPHERE &sphere)
+    {
+        // Encontra o ponto mais próximo no cubo ao centro da esfera
+        glm::vec4 closestPoint = glm::vec4(
+            std::max(cube.min.x, std::min(sphere.center.x, cube.max.x)),
+            std::max(cube.min.y, std::min(sphere.center.y, cube.max.y)),
+            std::max(cube.min.z, std::min(sphere.center.z, cube.max.z)),
+            1.0f);
 
-    // Função para calcular a distância entre o centro da esfera e o plano
-    bool checkCollision(const Sphere& sphere, const Plane& plane) {
-        float distanceToPlane = dotproduct(plane.normal, sphere.center) - plane.distance;
-        return std::abs(distanceToPlane) <= sphere.radius;
+        // Calcula a distância entre o ponto mais próximo e o centro da esfera
+        glm::vec4 difference = closestPoint - sphere.center;
+        float distance = glm::length(difference);
+
+        // Se a distância for menor ou igual ao raio, há colisão
+        return distance <= sphere.radius;
     }
 
-    // Função para calcular a distância entre o centro do cilindro e o plano
-    bool checkCollision(const Cylinder& cylinder, const Plane& plane) {
+    bool checkCollisionCubeCube(CUBE &cube1, CUBE &cube2)
+    {
+        // Checa se há sobreposição em todos os eixos
+        bool overlapX = cube1.min.x <= cube2.max.x && cube1.max.x >= cube2.min.x;
+        bool overlapY = cube1.min.y <= cube2.max.y && cube1.max.y >= cube2.min.y;
+        bool overlapZ = cube1.min.z <= cube2.max.z && cube1.max.z >= cube2.min.z;
 
-        float distanceToPlane = dotproduct(plane.normal, cylinder.center) - plane.distance;
-        return std::abs(distanceToPlane) <= cylinder.radius;
+        // Se há sobreposição em todos os eixos, há colisão
+        return overlapX && overlapY && overlapZ;
     }
 
-    // Produto escalar entre dois vetores u e v definidos em um sistema de
-    // coordenadas ortonormal.
+    // Produto escalar vetor u e v
     float dotproduct(glm::vec4 u, glm::vec4 v)
     {
         float u1 = u.x;
@@ -77,7 +89,46 @@ namespace collisions
         float v2 = v.y;
         float v3 = v.z;
 
-        return u1*v1 + u2*v2 + u3*v3;
+        return u1 * v1 + u2 * v2 + u3 * v3;
     }
-}
 
+    bool checkCollisionWithWalls2(CUBE &lara1996)
+    {
+        // Definição das paredes
+        CUBE parede0 = {glm::vec4(55.0f, -2.0f, 20.0f, 1.0f), glm::vec4(70.0f, 18.0f, 70.0f, 1.0f)};
+        CUBE parede1 = {glm::vec4(45.0f, -2.0f, 60.0f, 1.0f), glm::vec4(55.0f, 18.0f, 70.0f, 1.0f)};
+        CUBE parede2 = {glm::vec4(30.0f, -2.0f, 40.0f, 1.0f), glm::vec4(45.0f, 18.0f, 70.0f, 1.0f)};
+        CUBE parede3 = {glm::vec4(30.0f, -2.0f, 20.0f, 1.0f), glm::vec4(60.0f, 18.0f, 30.0f, 1.0f)};
+        CUBE parede4 = {glm::vec4(0.0f, -2.0f, 40.0f, 1.0f), glm::vec4(20.0f, 18.0f, 70.0f, 1.0f)};
+        CUBE parede5 = {glm::vec4(-10.0f, -2.0f, 60.0f, 1.0f), glm::vec4(0.0f, 18.0f, 70.0f, 1.0f)};
+        CUBE parede6 = {glm::vec4(-30.0f, -2.0f, 40.0f, 1.0f), glm::vec4(-10.0f, 18.0f, 70.0f, 1.0f)};
+        CUBE parede7 = {glm::vec4(-60.0f, -2.0f, 30.0f, 1.0f), glm::vec4(-40.0f, 18.0f, 70.0f, 1.0f)};
+        CUBE parede8 = {glm::vec4(-80.0f, -2.0f, 30.0f, 1.0f), glm::vec4(-60.0f, 18.0f, 45.0f, 1.0f)};
+        CUBE parede9 = {glm::vec4(-30.0f, -2.0f, 20.0f, 1.0f), glm::vec4(20.0f, 18.0f, 30.0f, 1.0f)};
+        CUBE parede10 = {glm::vec4(0.0f, -2.0f, -80.0f, 1.0f), glm::vec4(20.0f, 18.0f, -30.0f, 1.0f)};
+        CUBE parede11 = {glm::vec4(0.0f, -2.0f, -20.0f, 1.0f), glm::vec4(20.0f, 18.0f, 20.0f, 1.0f)};
+        CUBE parede12 = {glm::vec4(-30.0f, -2.0f, -65.0f, 1.0f), glm::vec4(0.0f, 18.0f, -45.0f, 1.0f)};
+        CUBE parede13 = {glm::vec4(-30.0f, -2.0f, -45.0f, 1.0f), glm::vec4(-10.0f, 18.0f, 10.0f, 1.0f)};
+        CUBE parede14 = {glm::vec4(30.0f, -2.0f, -80.0f, 1.0f), glm::vec4(45.0f, 18.0f, -65.0f, 1.0f)};
+        CUBE parede15 = {glm::vec4(30.0f, -2.0f, -65.0f, 1.0f), glm::vec4(70.0f, 18.0f, -50.0f, 1.0f)};
+        CUBE parede16 = {glm::vec4(60.0f, -2.0f, -50.0f, 1.0f), glm::vec4(70.0f, 18.0f, 10.0f, 1.0f)};
+        CUBE parede17 = {glm::vec4(30.0f, -2.0f, -40.0f, 1.0f), glm::vec4(50.0f, 18.0f, 10.0f, 1.0f)};
+        CUBE parede18 = {glm::vec4(-80.0f, -2.0f, -20.0f, 1.0f), glm::vec4(-40.0f, 18.0f, 0.0f, 1.0f)};
+        CUBE parede19 = {glm::vec4(-70.0f, -2.0f, 0.0f, 1.0f), glm::vec4(-60.0f, 18.0f, 20.0f, 1.0f)};
+        CUBE parede20 = {glm::vec4(-50.0f, -2.0f, 0.0f, 1.0f), glm::vec4(-40.0f, 18.0f, 20.0f, 1.0f)};
+
+        // Testa colisão com cada uma das paredes
+        if (checkCollisionCubeCube(lara1996, parede0) || checkCollisionCubeCube(lara1996, parede1) || checkCollisionCubeCube(lara1996, parede2) || checkCollisionCubeCube(lara1996, parede3) ||
+            checkCollisionCubeCube(lara1996, parede4) || checkCollisionCubeCube(lara1996, parede5) || checkCollisionCubeCube(lara1996, parede6) || checkCollisionCubeCube(lara1996, parede7) ||
+            checkCollisionCubeCube(lara1996, parede8) || checkCollisionCubeCube(lara1996, parede9) || checkCollisionCubeCube(lara1996, parede10) || checkCollisionCubeCube(lara1996, parede11) ||
+            checkCollisionCubeCube(lara1996, parede12) || checkCollisionCubeCube(lara1996, parede13) || checkCollisionCubeCube(lara1996, parede14) || checkCollisionCubeCube(lara1996, parede15)|| 
+            checkCollisionCubeCube(lara1996, parede16) || checkCollisionCubeCube(lara1996, parede17) || checkCollisionCubeCube(lara1996, parede18) || checkCollisionCubeCube(lara1996, parede19) ||
+            checkCollisionCubeCube(lara1996, parede20))
+
+        {
+            return true;
+        }
+        return false;
+    }
+
+}

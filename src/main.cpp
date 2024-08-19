@@ -47,6 +47,7 @@
 // Headers locais, definidos na pasta "include/"
 #include "utils.h"
 #include "matrices.h"
+#include "collisions.h"
 
 // Estrutura que representa um modelo geométrico carregado a partir de um
 // arquivo ".obj". Veja https://en.wikipedia.org/wiki/Wavefront_.obj_file .
@@ -195,8 +196,8 @@ bool g_MiddleMouseButtonPressed = false; // Análogo para botão do meio do mous
 // usuário através do mouse (veja função CursorPosCallback()). A posição
 // efetiva da câmera é calculada dentro da função main(), dentro do loop de
 // renderização.
-float g_CameraTheta = 0.0f;    // Ângulo no plano ZX em relação ao eixo Z
-float g_CameraPhi = 0.0f;      // Ângulo em relação ao eixo Y
+float g_CameraTheta = 0.0f;     // Ângulo no plano ZX em relação ao eixo Z
+float g_CameraPhi = 0.0f;       // Ângulo em relação ao eixo Y
 float g_CameraDistance = 10.5f; // Distância da câmera para a origem
 
 // Variáveis que controlam rotação do antebraço
@@ -228,6 +229,12 @@ GLint g_bbox_max_uniform;
 // Número de texturas carregadas pela função LoadTextureImage()
 GLuint g_NumLoadedTextures = 0;
 
+bool TEM_COLISAO_PAREDES = false;
+bool CRANIO_DESVENDADO = false;
+bool DENTE_DESVENDADO = false;
+bool ESTATUA_DESVENDADA = false;
+bool TEM_COLISAO_MUROS = false;
+
 // variaveis das teclas.
 bool tecla_W_pressionada = false;
 bool tecla_A_pressionada = false;
@@ -238,9 +245,9 @@ bool tecla_Enter_pressionada= false;
 // globais para uso da camera livre
 float g_Theta = 3.141592f / 4;
 float g_Phi = 3.141592f / 6;
-float xl = 0.0;
+float xl = -5.0;
 float yl = 0.0;
-float zl = 0.0;
+float zl = -5.0;
 
 //
 glm::vec3 bezierQuadratic(float t, const glm::vec3& p0, const glm::vec3& p1, const glm::vec3& p2) {
@@ -257,6 +264,8 @@ glm::vec3 bezierQuadratic(float t, const glm::vec3& p0, const glm::vec3& p1, con
 
 
 glm::vec4 camera_position_c = glm::vec4(75.0f, 5.0f, 75.0f, 1.0f); // Ponto "c", centro da câmera
+glm::vec4 camera_position_c_aux;
+glm::vec4 last_cam_pos;
 
 int main(int argc, char *argv[])
 {
@@ -490,9 +499,12 @@ int main(int argc, char *argv[])
             // Abaixo definimos as varáveis que efetivamente definem a câmera virtual.
             // Veja slides 195-227 e 229-234 do documento Aula_08_Sistemas_de_Coordenadas.pdf.
             glm::vec4 camera_position_c = glm::vec4(x + xl, y + yl, z + zl, 1.0f); // Ponto "c", centro da câmera
-            glm::vec4 camera_lookat_l = glm::vec4(xl, yl, zl, 1.0f);               // Ponto "l", para onde a câmera (look-at) estará sempre olhando
-            camera_view_vector = camera_lookat_l - camera_position_c;              // Vetor "view", sentido para onde a câmera está virada
-            glm::vec4 camera_up_vector = glm::vec4(0.0f, 1.0f, 0.0f, 0.0f);        // Vetor "up" fixado para apontar para o "céu" (eito Y global)
+            glm::vec4 camera_position_c_aux;
+            glm::vec4 last_cam_pos = camera_position_c;
+
+            glm::vec4 camera_lookat_l = glm::vec4(xl, yl, zl, 1.0f);        // Ponto "l", para onde a câmera (look-at) estará sempre olhando
+            camera_view_vector = camera_lookat_l - camera_position_c;       // Vetor "view", sentido para onde a câmera está virada
+            glm::vec4 camera_up_vector = glm::vec4(0.0f, 1.0f, 0.0f, 0.0f); // Vetor "up" fixado para apontar para o "céu" (eito Y global)
 
             // Computamos a matriz "View" utilizando os parâmetros da câmera para
             // definir o sistema de coordenadas da câmera.  Veja slides 2-14, 184-190 e 236-242 do documento Aula_08_Sistemas_de_Coordenadas.pdf.
@@ -507,37 +519,40 @@ int main(int argc, char *argv[])
             float delta_t = current_time - prev_time;
             prev_time = current_time;
 
-            if (camera_position_c[1]<7.0f)
+            if (camera_position_c[1] < 7.0f)
             {
                 camera_position_c[1] = 7.0f; // MANTEM ALTURA DA CAMERA FIXA
             }
-            // Realiza movimentação de objetos
-            if (tecla_W_pressionada)
+            if (!TEM_COLISAO_PAREDES)
             {
-                // Movimenta câmera para frente
-                xl += -vetor_w[0] * speed * delta_t;
-                yl += -vetor_w[1] * speed * delta_t;
-                zl += -vetor_w[2] * speed * delta_t;
-                camera_position_c[0] += vetor_w[0] * speed * delta_t - 1.0f;
-            }
-            if (tecla_A_pressionada)
-            {
-                xl += -vetor_u[0] * speed * delta_t;
-                yl += -vetor_u[1] * speed * delta_t;
-                zl += -vetor_u[2] * speed * delta_t;
-            }
-            if (tecla_S_pressionada)
-            {
-                // Movimenta câmera para trás
-                xl += vetor_w[0] * speed * delta_t;
-                yl += vetor_w[1] * speed * delta_t;
-                zl += vetor_w[2] * speed * delta_t;
-            }
-            if (tecla_D_pressionada)
-            {
-                xl += vetor_u[0] * speed * delta_t;
-                yl += vetor_u[1] * speed * delta_t;
-                zl += vetor_u[2] * speed * delta_t;
+                // Realiza movimentação de objetos
+                if (tecla_W_pressionada)
+                {
+                    // Movimenta câmera para frente
+                    xl += -vetor_w[0] * speed * delta_t;
+                    yl += -vetor_w[1] * speed * delta_t;
+                    zl += -vetor_w[2] * speed * delta_t;
+                    //  camera_position_c[0] += vetor_w[0] * speed * delta_t - 1.0f;
+                }
+                if (tecla_A_pressionada)
+                {
+                    xl += -vetor_u[0] * speed * delta_t;
+                    yl += -vetor_u[1] * speed * delta_t;
+                    zl += -vetor_u[2] * speed * delta_t;
+                }
+                if (tecla_S_pressionada)
+                {
+                    // Movimenta câmera para trás
+                    xl += vetor_w[0] * speed * delta_t;
+                    yl += vetor_w[1] * speed * delta_t;
+                    zl += vetor_w[2] * speed * delta_t;
+                }
+                if (tecla_D_pressionada)
+                {
+                    xl += vetor_u[0] * speed * delta_t;
+                    yl += vetor_u[1] * speed * delta_t;
+                    zl += vetor_u[2] * speed * delta_t;
+                }
             }
 
             // Computamos a matriz "View" utilizando os parâmetros da câmera para
@@ -625,64 +640,236 @@ int main(int argc, char *argv[])
         glUniform1i(g_object_id_uniform, PLANE);
         DrawVirtualObject("the_plane");
 
+        float laraSize = 2.0f;                                  // Por exemplo, 2.0 unidades de tamanho
+        glm::vec4 laraPosition = glm::vec4(xl, 2.0f, zl, 1.0f); // Posição atual da Lara Croft
 
-        //DESENHA A LARA CROFT VELHA (MOVIMENTACAO)
-        for (int i = 2; i < 8; i++)
+        collisions::CUBE lara1996;
+
+        // Define as coordenadas mínimas e máximas com base na posição e tamanho
+        lara1996.min = laraPosition - glm::vec4(laraSize / 2, laraSize / 2, laraSize / 2, 0.0f);
+        lara1996.max = laraPosition + glm::vec4(laraSize / 2, laraSize / 2, laraSize / 2, 0.0f);
+
+        if (!checkCollisionWithWalls(lara1996) && (!checkCollisionWithWalls2(lara1996)))
         {
-           //como faço para rotacionar a personagem no eixo Y para que a sua rotação siga a direção que a camera olha? Como um jogo em terceira pessoa
+            TEM_COLISAO_PAREDES = false;
+            // DESENHA A LARA CROFT VELHA (MOVIMENTACAO)
+            for (int i = 2; i < 8; i++)
+            {
+                // como faço para rotacionar a personagem no eixo Y para que a sua rotação siga a direção que a camera olha? Como um jogo em terceira pessoa
 
-            model = Matrix_Translate(xl, 2.0f, zl) * Matrix_Rotate_Y(atan2(camera_view_vector[0],camera_view_vector[2]) +3.14f/2)* Matrix_Scale(ESCALALARAVELHA, ESCALALARAVELHA, ESCALALARAVELHA);
-            glUniformMatrix4fv(g_model_uniform, 1, GL_FALSE, glm::value_ptr(model));
+                // FONTE COPILOT (matrix_rotate_y(xxxxx))
+                model = Matrix_Translate(xl, 2.0f, zl) * Matrix_Rotate_Y(atan2(camera_view_vector[0], camera_view_vector[2]) + 3.14f / 2) * Matrix_Scale(ESCALALARAVELHA, ESCALALARAVELHA, ESCALALARAVELHA);
+                glUniformMatrix4fv(g_model_uniform, 1, GL_FALSE, glm::value_ptr(model));
 
-            if (i == 2)
-            {
-                glUniform1i(g_object_id_uniform, i);
-                DrawVirtualObject("the_hands");
+                if (i == 2)
+                {
+                    glUniform1i(g_object_id_uniform, i);
+                    DrawVirtualObject("the_hands");
+                }
+                if (i == 3)
+                {
+                    glUniform1i(g_object_id_uniform, i);
+                    DrawVirtualObject("the_pistols");
+                }
+                if (i == 4)
+                {
+                    glUniform1i(g_object_id_uniform, i);
+                    DrawVirtualObject("the_face");
+                }
+                if (i == 5)
+                {
+                    glUniform1i(g_object_id_uniform, i);
+                    DrawVirtualObject("the_hair");
+                }
+                if (i == 6)
+                {
+                    glUniform1i(g_object_id_uniform, i);
+                    DrawVirtualObject("the_body");
+                }
+                if (i == 7)
+                {
+                    glUniform1i(g_object_id_uniform, i);
+                    DrawVirtualObject("the_coldre");
+                }
             }
-            if (i == 3)
+
+            glm::vec4 camera_up_vector = glm::vec4(0.0f, 1.0f, 0.0f, 0.0f); // Vetor "up" fixado para apontar para o "céu" (eito Y global)
+
+            glm::vec4 vetor_w = -camera_view_vector / norm(camera_view_vector);
+            glm::vec4 vetor_u = (crossproduct(camera_up_vector, vetor_w)) / norm(crossproduct(camera_up_vector, vetor_w));
+
+            // // Atualiza delta de tempo
+            float current_time = (float)glfwGetTime();
+            float delta_t = current_time - prev_time;
+            prev_time = current_time;
+
+            if (tecla_W_pressionada)
             {
-                glUniform1i(g_object_id_uniform, i);
-                DrawVirtualObject("the_pistols");
+                xl += -vetor_w[0] * speed * delta_t;
+                yl += -vetor_w[1] * speed * delta_t;
+                zl += -vetor_w[2] * speed * delta_t;
             }
-            if (i == 4)
+            if (tecla_A_pressionada)
             {
-                glUniform1i(g_object_id_uniform, i);
-                DrawVirtualObject("the_face");
+                xl += -vetor_u[0] * speed * delta_t;
+                yl += -vetor_u[1] * speed * delta_t;
+                zl += -vetor_u[2] * speed * delta_t;
             }
-            if (i == 5)
+            if (tecla_S_pressionada)
             {
-                glUniform1i(g_object_id_uniform, i);
-                DrawVirtualObject("the_hair");
+                xl += vetor_w[0] * speed * delta_t;
+                yl += vetor_w[1] * speed * delta_t;
+                zl += vetor_w[2] * speed * delta_t;
             }
-            if (i == 6)
+            if (tecla_D_pressionada)
             {
-                glUniform1i(g_object_id_uniform, i);
-                DrawVirtualObject("the_body");
+                xl += vetor_u[0] * speed * delta_t;
+                yl += vetor_u[1] * speed * delta_t;
+                zl += vetor_u[2] * speed * delta_t;
             }
-            if (i == 7)
+            camera_position_c_aux = glm::vec4(xl, 2.0f, zl, 1.0f);
+        }
+        else if (checkCollisionWithWalls(lara1996) || checkCollisionWithWalls2(lara1996))
+        {
+            last_cam_pos = camera_position_c_aux;
+            TEM_COLISAO_PAREDES = true;
+            // Desenhamos o modelo do jogador
+
+            for (int i = 2; i < 8; i++)
             {
-                glUniform1i(g_object_id_uniform, i);
-                DrawVirtualObject("the_coldre");
+
+                // FONTE COPILOT (matrix_rotate_y(xxxxx))
+                model = Matrix_Translate(last_cam_pos.x, last_cam_pos.y, last_cam_pos.z) * Matrix_Rotate_Y(atan2(camera_view_vector[0], camera_view_vector[2]) + 3.14f / 2) * Matrix_Scale(ESCALALARAVELHA, ESCALALARAVELHA, ESCALALARAVELHA);
+                glUniformMatrix4fv(g_model_uniform, 1, GL_FALSE, glm::value_ptr(model));
+
+                if (i == 2)
+                {
+                    glUniform1i(g_object_id_uniform, i);
+                    DrawVirtualObject("the_hands");
+                }
+                if (i == 3)
+                {
+                    glUniform1i(g_object_id_uniform, i);
+                    DrawVirtualObject("the_pistols");
+                }
+                if (i == 4)
+                {
+                    glUniform1i(g_object_id_uniform, i);
+                    DrawVirtualObject("the_face");
+                }
+                if (i == 5)
+                {
+                    glUniform1i(g_object_id_uniform, i);
+                    DrawVirtualObject("the_hair");
+                }
+                if (i == 6)
+                {
+                    glUniform1i(g_object_id_uniform, i);
+                    DrawVirtualObject("the_body");
+                }
+                if (i == 7)
+                {
+                    glUniform1i(g_object_id_uniform, i);
+                    DrawVirtualObject("the_coldre");
+                }
+            }
+
+            glm::vec4 camera_up_vector = glm::vec4(0.0f, 1.0f, 0.0f, 0.0f); // Vetor "up" fixado para apontar para o "céu" (eito Y global)
+
+            glm::vec4 vetor_w = -camera_view_vector / norm(camera_view_vector);
+            glm::vec4 vetor_u = (crossproduct(camera_up_vector, vetor_w)) / norm(crossproduct(camera_up_vector, vetor_w));
+
+            // // Atualiza delta de tempo
+            float current_time = (float)glfwGetTime();
+            float delta_t = current_time - prev_time;
+            prev_time = current_time;
+
+            glm::vec4 tentative_position = camera_position_c_aux;
+            if (tecla_W_pressionada)
+            {
+                tentative_position.x += -vetor_w[0] * speed * delta_t;
+                tentative_position.z += -vetor_w[2] * speed * delta_t;
+            }
+            if (tecla_A_pressionada)
+            {
+                tentative_position.x += -vetor_u[0] * speed * delta_t;
+                tentative_position.z += -vetor_u[2] * speed * delta_t;
+            }
+            if (tecla_S_pressionada)
+            {
+                tentative_position.x += vetor_w[0] * speed * delta_t;
+                tentative_position.z += vetor_w[2] * speed * delta_t;
+            }
+            if (tecla_D_pressionada)
+            {
+                tentative_position.x += vetor_u[0] * speed * delta_t;
+                tentative_position.z += vetor_u[2] * speed * delta_t;
+            }
+
+            // Verifica se a nova posição também resulta em colisão
+            lara1996.min = tentative_position - glm::vec4(laraSize / 2, laraSize / 2, laraSize / 2, 0.0f);
+            lara1996.max = tentative_position + glm::vec4(laraSize / 2, laraSize / 2, laraSize / 2, 0.0f);
+
+            if (!checkCollisionWithWalls(lara1996) && !checkCollisionWithWalls2(lara1996))
+            {
+                // Se não houver colisão, atualiza a posição e permite movimentação
+                xl = tentative_position.x;
+                zl = tentative_position.z;
+                camera_position_c_aux = tentative_position;
+                TEM_COLISAO_PAREDES = false;
             }
         }
 
+        collisions::SPHERE cranio;
+        cranio.radius = 3.0f;
+        cranio.center = glm::vec4(50.0f, -1.8f, -73.0f, 1.0f);
+
+        collisions::SPHERE dente;
+        dente.radius = 1.0f;
+        dente.center = glm::vec4(-70.0f, 1.0f, 55.0f, 1.0f);
+
+        collisions::SPHERE estatua;
+        estatua.radius = 3.0f;
+        estatua.center = glm::vec4(50.0f, -1.0f, 55.0f, 1.0f);
+
         // DESENHA CRANIO (PRIMEIRO ARTEFATO)
-        model = Matrix_Translate(50.0f, -1.8f, -73.0f) * Matrix_Rotate_X(-3.14 / 2) * Matrix_Scale(0.05f, 0.05f, 0.05f);
-        glUniformMatrix4fv(g_model_uniform, 1, GL_FALSE, glm::value_ptr(model));
-        glUniform1i(g_object_id_uniform, CRANIO);
-        DrawVirtualObject("artifact1");
+        if (!checkCollisionCubeSphere(lara1996, cranio) && !CRANIO_DESVENDADO)
+        {
+            model = Matrix_Translate(50.0f, -1.8f, -73.0f) * Matrix_Rotate_X(-3.14 / 2) * Matrix_Scale(0.05f, 0.05f, 0.05f);
+            glUniformMatrix4fv(g_model_uniform, 1, GL_FALSE, glm::value_ptr(model));
+            glUniform1i(g_object_id_uniform, CRANIO);
+            DrawVirtualObject("artifact1");
+        }
+        else
+        {
+            CRANIO_DESVENDADO = true;
+        }
 
-        // DESENHA DENTE (SEGUNDO ARTEFATO)
-        model = Matrix_Translate(-70.0f, 1.0f, 55.0f) * Matrix_Rotate_X(-3.14 / 2) * Matrix_Scale(1.5f, 1.5f, 1.5f);
-        glUniformMatrix4fv(g_model_uniform, 1, GL_FALSE, glm::value_ptr(model));
-        glUniform1i(g_object_id_uniform, DENTE);
-        DrawVirtualObject("dente");
-
-        // DESENHA ESTATUA (TERCEIRO ARTEFATO)
-        model = Matrix_Translate(50.0f, -1.0f, 55.0f) * Matrix_Rotate_X(-3.14 / 2) * Matrix_Scale(0.2f, 0.2f, 0.2f);
-        glUniformMatrix4fv(g_model_uniform, 1, GL_FALSE, glm::value_ptr(model));
-        glUniform1i(g_object_id_uniform, ESTATUA);
-        DrawVirtualObject("estatua");
+        // DESENHA DENTE
+        if (!checkCollisionCubeSphere(lara1996, dente) && !DENTE_DESVENDADO)
+        {
+            model = Matrix_Translate(-70.0f, 1.0f, 55.0f) * Matrix_Rotate_X(-3.14 / 2) * Matrix_Scale(1.5f, 1.5f, 1.5f);
+            glUniformMatrix4fv(g_model_uniform, 1, GL_FALSE, glm::value_ptr(model));
+            glUniform1i(g_object_id_uniform, DENTE);
+            DrawVirtualObject("dente");
+        }
+        else
+        {
+            DENTE_DESVENDADO = true;
+        }
+        //DESENHA ESTATUA
+        if (!checkCollisionCubeSphere(lara1996, estatua) && !ESTATUA_DESVENDADA)
+        {
+            // DESENHA ESTATUA (TERCEIRO ARTEFATO)
+            model = Matrix_Translate(50.0f, -1.0f, 55.0f) * Matrix_Rotate_X(-3.14 / 2) * Matrix_Scale(0.2f, 0.2f, 0.2f);
+            glUniformMatrix4fv(g_model_uniform, 1, GL_FALSE, glm::value_ptr(model));
+            glUniform1i(g_object_id_uniform, ESTATUA);
+            DrawVirtualObject("estatua");
+        }
+        else
+        {
+            ESTATUA_DESVENDADA = true;
+        }
      
     if(tecla_Enter_pressionada){
         glm::vec3 p0(xl, yl, zl);
@@ -696,14 +883,13 @@ int main(int argc, char *argv[])
         glUniformMatrix4fv(g_model_uniform,1,GL_FALSE,glm::value_ptr(model));
         glUniform1i(g_object_id_uniform,ARROW1);
         DrawVirtualObject("object_0");
-     
 
     }
         
     // DESENHA MODELO ATUAL (lara2013)
         for (int i = 12; i < 36; i++)
         {
-            model = Matrix_Translate(-70.0f, 5.5f, -70.0f) * Matrix_Rotate_Z(g_AngleZ) * Matrix_Rotate_Y(g_AngleY-3.14f) * Matrix_Rotate_X(g_AngleX) * Matrix_Scale(ESCALALARAVELHA * 2, ESCALALARAVELHA * 2, ESCALALARAVELHA * 2);
+            model = Matrix_Translate(-70.0f, 5.5f, -70.0f) * Matrix_Rotate_Z(g_AngleZ) * Matrix_Rotate_Y(g_AngleY - 3.14f) * Matrix_Rotate_X(g_AngleX) * Matrix_Scale(ESCALALARAVELHA * 2, ESCALALARAVELHA * 2, ESCALALARAVELHA * 2);
             glUniformMatrix4fv(g_model_uniform, 1, GL_FALSE, glm::value_ptr(model));
 
             if (i == 12)
@@ -828,6 +1014,16 @@ int main(int argc, char *argv[])
             }
         }
 
+        
+        collisions::CUBE parede0;
+        parede0.min = glm::vec4(55.0f,-2.0f,20.0f,1.0f);
+        parede0.max = glm::vec4(70.0f,18.0f,70.0f,1.0f);
+
+
+     //   if(!checkCollisionCubeCube(lara1996,parede0))
+//{
+     //       printf("JAHAHAHAHAHAHA BATEU");
+     //   }
         // cópias cubo
         for (int i = 0; i < 21; i++)
         {
@@ -920,6 +1116,9 @@ int main(int argc, char *argv[])
             DrawVirtualObject("the_cube");
         }
 
+
+
+
         // Vamos desenhar 4 instâncias (cópias) da parede
         for (int i = 1; i <= 4; ++i)
         {
@@ -954,16 +1153,6 @@ int main(int argc, char *argv[])
             DrawVirtualObject("the_plane");
         }
 
-        // glm::vec3 bbox_min = g_VirtualScene["the_body"].bbox_min;
-        // glm::vec3 bbox_max = g_VirtualScene["the_body"].bbox_max;
-        // glm::vec3 bbox_maxC= g_VirtualScene["the_cube"].bbox_max;
-        //  glm::vec3 bbox_minC= g_VirtualScene["the_cube"].bbox_min;
-        //     if( (bbox_min.x <= bbox_maxC.x && bbox_max.x >= bbox_minC.x) &&
-        //        (bbox_min.y <= bbox_maxC.y && bbox_max.y >= bbox_minC.y) &&
-        //        (bbox_min.z <= bbox_maxC.z && bbox_max.z >= bbox_minC.z)){
-        //
-        //
-        // };
         // Imprimimos na tela os ângulos de Euler que controlam a rotação do
         // terceiro cubo.
         TextRendering_ShowEulerAngles(window);

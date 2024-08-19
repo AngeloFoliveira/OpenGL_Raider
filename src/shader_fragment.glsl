@@ -221,7 +221,7 @@ if ( object_id == MURO)
 
         U = ((position_model[0]-minx)/(maxx-minx))*5.0f;
         V = ((position_model[2]-minz)/(maxz-minz))*5.0f;
-        
+
         Kd = vec3(0.2,0.2,0.2);
         Ks = vec3(0.3,0.3,0.3);
         Ka = vec3(0.1,0.1,0.1);
@@ -399,7 +399,7 @@ if ( object_id == MURO)
                                 else if (object_id == COLDRELARAVELHA)
                                     color.rgb = Kd7 * (lambert + 0.01);
                                     else if (object_id == MURO)
-                                        color.rgb = Kd8;
+                                        color.rgb = Kd8 * (lambert + 0.01);
                                         else if (object_id == CRANIO)
                                             color.rgb = Kd9 * (lambert+0.01);
                                             else if (object_id == DENTE)

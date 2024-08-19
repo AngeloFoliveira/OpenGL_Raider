@@ -1,32 +1,38 @@
 [
 {
-  "directory": "C:/Users/angel/Downloads/OpenGL_Raider-main (2)/OpenGL_Raider-main/OpenGL_Raider-main/build",
-  "command": "C:\\PROGRA~1\\CODEBL~1\\MinGW\\bin\\G__~1.EXE  @CMakeFiles/main.dir/includes_CXX.rsp -g -std=c++11 -o CMakeFiles\\main.dir\\src\\main.cpp.obj -c \"C:\\Users\\angel\\Downloads\\OpenGL_Raider-main (2)\\OpenGL_Raider-main\\OpenGL_Raider-main\\src\\main.cpp\"",
-  "file": "C:/Users/angel/Downloads/OpenGL_Raider-main (2)/OpenGL_Raider-main/OpenGL_Raider-main/src/main.cpp",
+  "directory": "C:/Users/angel/Downloads/auxilio emergenficak/OpenGL_Raider-main/OpenGL_Raider-main/build",
+  "command": "C:\\MinGW\\bin\\g++.exe  @CMakeFiles/main.dir/includes_CXX.rsp -g -std=c++11 -o CMakeFiles\\main.dir\\src\\main.cpp.obj -c \"C:\\Users\\angel\\Downloads\\auxilio emergenficak\\OpenGL_Raider-main\\OpenGL_Raider-main\\src\\main.cpp\"",
+  "file": "C:/Users/angel/Downloads/auxilio emergenficak/OpenGL_Raider-main/OpenGL_Raider-main/src/main.cpp",
   "output": "CMakeFiles/main.dir/src/main.cpp.obj"
 },
 {
-  "directory": "C:/Users/angel/Downloads/OpenGL_Raider-main (2)/OpenGL_Raider-main/OpenGL_Raider-main/build",
-  "command": "C:\\PROGRA~1\\CODEBL~1\\MinGW\\bin\\G__~1.EXE  @CMakeFiles/main.dir/includes_CXX.rsp -g -std=c++11 -o CMakeFiles\\main.dir\\src\\textrendering.cpp.obj -c \"C:\\Users\\angel\\Downloads\\OpenGL_Raider-main (2)\\OpenGL_Raider-main\\OpenGL_Raider-main\\src\\textrendering.cpp\"",
-  "file": "C:/Users/angel/Downloads/OpenGL_Raider-main (2)/OpenGL_Raider-main/OpenGL_Raider-main/src/textrendering.cpp",
+  "directory": "C:/Users/angel/Downloads/auxilio emergenficak/OpenGL_Raider-main/OpenGL_Raider-main/build",
+  "command": "C:\\MinGW\\bin\\g++.exe  @CMakeFiles/main.dir/includes_CXX.rsp -g -std=c++11 -o CMakeFiles\\main.dir\\src\\textrendering.cpp.obj -c \"C:\\Users\\angel\\Downloads\\auxilio emergenficak\\OpenGL_Raider-main\\OpenGL_Raider-main\\src\\textrendering.cpp\"",
+  "file": "C:/Users/angel/Downloads/auxilio emergenficak/OpenGL_Raider-main/OpenGL_Raider-main/src/textrendering.cpp",
   "output": "CMakeFiles/main.dir/src/textrendering.cpp.obj"
 },
 {
-  "directory": "C:/Users/angel/Downloads/OpenGL_Raider-main (2)/OpenGL_Raider-main/OpenGL_Raider-main/build",
-  "command": "C:\\PROGRA~1\\CODEBL~1\\MinGW\\bin\\G__~1.EXE  @CMakeFiles/main.dir/includes_CXX.rsp -g -std=c++11 -o CMakeFiles\\main.dir\\src\\tiny_obj_loader.cpp.obj -c \"C:\\Users\\angel\\Downloads\\OpenGL_Raider-main (2)\\OpenGL_Raider-main\\OpenGL_Raider-main\\src\\tiny_obj_loader.cpp\"",
-  "file": "C:/Users/angel/Downloads/OpenGL_Raider-main (2)/OpenGL_Raider-main/OpenGL_Raider-main/src/tiny_obj_loader.cpp",
+  "directory": "C:/Users/angel/Downloads/auxilio emergenficak/OpenGL_Raider-main/OpenGL_Raider-main/build",
+  "command": "C:\\MinGW\\bin\\g++.exe  @CMakeFiles/main.dir/includes_CXX.rsp -g -std=c++11 -o CMakeFiles\\main.dir\\src\\tiny_obj_loader.cpp.obj -c \"C:\\Users\\angel\\Downloads\\auxilio emergenficak\\OpenGL_Raider-main\\OpenGL_Raider-main\\src\\tiny_obj_loader.cpp\"",
+  "file": "C:/Users/angel/Downloads/auxilio emergenficak/OpenGL_Raider-main/OpenGL_Raider-main/src/tiny_obj_loader.cpp",
   "output": "CMakeFiles/main.dir/src/tiny_obj_loader.cpp.obj"
 },
 {
-  "directory": "C:/Users/angel/Downloads/OpenGL_Raider-main (2)/OpenGL_Raider-main/OpenGL_Raider-main/build",
-  "command": "C:\\PROGRA~1\\CODEBL~1\\MinGW\\bin\\G__~1.EXE  @CMakeFiles/main.dir/includes_CXX.rsp -g -std=c++11 -o CMakeFiles\\main.dir\\src\\stb_image.cpp.obj -c \"C:\\Users\\angel\\Downloads\\OpenGL_Raider-main (2)\\OpenGL_Raider-main\\OpenGL_Raider-main\\src\\stb_image.cpp\"",
-  "file": "C:/Users/angel/Downloads/OpenGL_Raider-main (2)/OpenGL_Raider-main/OpenGL_Raider-main/src/stb_image.cpp",
+  "directory": "C:/Users/angel/Downloads/auxilio emergenficak/OpenGL_Raider-main/OpenGL_Raider-main/build",
+  "command": "C:\\MinGW\\bin\\g++.exe  @CMakeFiles/main.dir/includes_CXX.rsp -g -std=c++11 -o CMakeFiles\\main.dir\\src\\stb_image.cpp.obj -c \"C:\\Users\\angel\\Downloads\\auxilio emergenficak\\OpenGL_Raider-main\\OpenGL_Raider-main\\src\\stb_image.cpp\"",
+  "file": "C:/Users/angel/Downloads/auxilio emergenficak/OpenGL_Raider-main/OpenGL_Raider-main/src/stb_image.cpp",
   "output": "CMakeFiles/main.dir/src/stb_image.cpp.obj"
 },
 {
-  "directory": "C:/Users/angel/Downloads/OpenGL_Raider-main (2)/OpenGL_Raider-main/OpenGL_Raider-main/build",
-  "command": "C:\\PROGRA~1\\CODEBL~1\\MinGW\\bin\\gcc.exe  @CMakeFiles/main.dir/includes_C.rsp -g -o CMakeFiles\\main.dir\\src\\glad.c.obj -c \"C:\\Users\\angel\\Downloads\\OpenGL_Raider-main (2)\\OpenGL_Raider-main\\OpenGL_Raider-main\\src\\glad.c\"",
-  "file": "C:/Users/angel/Downloads/OpenGL_Raider-main (2)/OpenGL_Raider-main/OpenGL_Raider-main/src/glad.c",
+  "directory": "C:/Users/angel/Downloads/auxilio emergenficak/OpenGL_Raider-main/OpenGL_Raider-main/build",
+  "command": "C:\\MinGW\\bin\\gcc.exe  @CMakeFiles/main.dir/includes_C.rsp -g -o CMakeFiles\\main.dir\\src\\glad.c.obj -c \"C:\\Users\\angel\\Downloads\\auxilio emergenficak\\OpenGL_Raider-main\\OpenGL_Raider-main\\src\\glad.c\"",
+  "file": "C:/Users/angel/Downloads/auxilio emergenficak/OpenGL_Raider-main/OpenGL_Raider-main/src/glad.c",
   "output": "CMakeFiles/main.dir/src/glad.c.obj"
+},
+{
+  "directory": "C:/Users/angel/Downloads/auxilio emergenficak/OpenGL_Raider-main/OpenGL_Raider-main/build",
+  "command": "C:\\MinGW\\bin\\g++.exe  @CMakeFiles/main.dir/includes_CXX.rsp -g -std=c++11 -o CMakeFiles\\main.dir\\src\\collisions.cpp.obj -c \"C:\\Users\\angel\\Downloads\\auxilio emergenficak\\OpenGL_Raider-main\\OpenGL_Raider-main\\src\\collisions.cpp\"",
+  "file": "C:/Users/angel/Downloads/auxilio emergenficak/OpenGL_Raider-main/OpenGL_Raider-main/src/collisions.cpp",
+  "output": "CMakeFiles/main.dir/src/collisions.cpp.obj"
 }
 ]
