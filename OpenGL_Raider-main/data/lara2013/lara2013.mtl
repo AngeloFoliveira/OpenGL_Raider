@@ -1,0 +1,242 @@
+# Blender 4.2.0 MTL File: 'None'
+# www.blender.org
+
+newmtl Modelarmleft_Material002
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 1
+map_Kd C:/Users/angel/Downloads/2013/camisa.png
+map_d C:/Users/angel/Downloads/2013/camisa.png
+
+newmtl Modelboots_Material021
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 1
+map_Kd C:/Users/angel/Downloads/2013/bota.png
+map_d C:/Users/angel/Downloads/2013/bota.png
+
+newmtl Modelbradi4_Material007
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 1
+map_Kd C:/Users/angel/Downloads/2013/cabelo4.png
+map_d C:/Users/angel/Downloads/2013/cabelo4.png
+
+newmtl Modelbraid1_Material004
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 1
+map_Kd C:/Users/angel/Downloads/2013/cabelo1.png
+map_d C:/Users/angel/Downloads/2013/cabelo1.png
+
+newmtl Modelbraid2_Material005
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 1
+map_Kd C:/Users/angel/Downloads/2013/cabelo2.png
+map_d C:/Users/angel/Downloads/2013/cabelo2.png
+
+newmtl Modelbraid3_Material006
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 1
+map_Kd C:/Users/angel/Downloads/2013/cabelo3.png
+map_d C:/Users/angel/Downloads/2013/cabelo3.png
+
+newmtl Modelbrow_001_Material003
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+illum 1
+map_Kd C:/Users/angel/Downloads/2013/sobrancelha.png
+map_d C:/Users/angel/Downloads/2013/sobrancelha.png
+
+newmtl Modelemblem_Material001
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 1
+map_Kd C:/Users/angel/Downloads/2013/calca.png
+map_d C:/Users/angel/Downloads/2013/calca.png
+
+newmtl Modeleye_Material018
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 1
+map_Kd C:/Users/angel/Downloads/2013/olho.png
+map_d C:/Users/angel/Downloads/2013/olho.png
+
+newmtl Modelface!!_Material024
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 1
+map_Kd rosto.png
+map_d rosto.png
+
+newmtl Modelface!2nPart!_Material023
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 1
+map_Kd rosto.png
+map_d rosto.png
+
+newmtl Modelface_Material022
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+illum 1
+map_Kd C:/Users/angel/Downloads/2013/rosto.png
+map_d C:/Users/angel/Downloads/2013/rosto.png
+
+newmtl Modelgear_Material009
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 1
+map_Kd C:/Users/angel/Downloads/2013/ferramentas.png
+map_d C:/Users/angel/Downloads/2013/ferramentas.png
+
+newmtl Modelglove_Material010
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 1
+map_Kd C:/Users/angel/Downloads/2013/luva.png
+map_d C:/Users/angel/Downloads/2013/luva.png
+
+newmtl Modelhair1_Material011
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 1
+map_Kd C:/Users/angel/Downloads/2013/cabelo5.png
+map_d C:/Users/angel/Downloads/2013/cabelo5.png
+
+newmtl Modelhairbase_Material012
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+illum 1
+map_Kd C:/Users/angel/Downloads/2013/cabelo6.png
+map_d C:/Users/angel/Downloads/2013/cabelo6.png
+
+newmtl Modelhand_Material020
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+illum 1
+map_Kd C:/Users/angel/Downloads/2013/mao.png
+map_d C:/Users/angel/Downloads/2013/mao.png
+
+newmtl Modelholster_Material008
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 1
+map_Kd C:/Users/angel/Downloads/2013/coldre.png
+map_d C:/Users/angel/Downloads/2013/coldre.png
+
+newmtl Modellash_001_Material019
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+illum 1
+map_Kd C:/Users/angel/Downloads/2013/cilio.png
+map_d C:/Users/angel/Downloads/2013/cilio.png
+
+newmtl Modelmouth_Material015
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 1
+map_Kd boca.png
+map_d boca.png
+
+newmtl Modelpant_Material016
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 1
+map_Kd C:/Users/angel/Downloads/2013/calca.png
+map_d C:/Users/angel/Downloads/2013/calca.png
+
+newmtl Modelshad_001_Material017
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 1
+map_Kd C:/Users/angel/Downloads/2013/shad.png
+map_d C:/Users/angel/Downloads/2013/shad.png
+
+newmtl Modelshirt_Material014
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 1
+map_Kd C:/Users/angel/Downloads/2013/camisa.png
+map_d C:/Users/angel/Downloads/2013/camisa.png
+
+newmtl Modelupper_Material013
+Ns 0.000000
+Ka 1.000000 1.000000 1.000000
+Ks 0.000000 0.000000 0.000000
+Ke 0.000000 0.000000 0.000000
+Ni 1.500000
+illum 1
+map_Kd C:/Users/angel/Downloads/2013/camisa.png
+map_d C:/Users/angel/Downloads/2013/camisa.png
