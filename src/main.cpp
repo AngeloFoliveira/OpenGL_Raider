@@ -347,7 +347,8 @@ int main(int argc, char *argv[])
     LoadTextureImage("../../data/lara2013/rosto.png");       // Textureimage28
     LoadTextureImage("../../data/lara2013/shad.png");        // Textureimage29
     LoadTextureImage("../../data/lara2013/sobrancelha.png"); // Textureimage30
-
+    LoadTextureImage("../../data/arrow/arrow.jpeg");
+  
     ObjModel planemodel("../../data/plane.obj");
     ComputeNormals(&planemodel);
     BuildTrianglesAndAddToVirtualScene(&planemodel);
@@ -376,6 +377,9 @@ int main(int argc, char *argv[])
     ComputeNormals(&laranova);
     BuildTrianglesAndAddToVirtualScene(&laranova);
 
+    ObjModel arrow("../../data/arrow/model.obj");
+    ComputeNormals(&arrow);
+    BuildTrianglesAndAddToVirtualScene(&arrow);
     // PrintObjModelInfo(&muro);
 
     if (argc > 1)
@@ -594,7 +598,7 @@ int main(int argc, char *argv[])
 #define SHADLARANOVA 33
 #define SOBRANCELHALARANOVA 34
 #define CALCA2LARANOVA 35
-
+#define ARROW1 36
 #define ESCALALARAVELHA 3
 #define ALTURAMURO 20
 
@@ -662,8 +666,15 @@ int main(int argc, char *argv[])
         glUniformMatrix4fv(g_model_uniform, 1, GL_FALSE, glm::value_ptr(model));
         glUniform1i(g_object_id_uniform, ESTATUA);
         DrawVirtualObject("estatua");
+          
+        model= Matrix_Translate(-65.0f, 1.0f, 55.0f) * Matrix_Rotate_X(-3.14 / 2) * Matrix_Scale(.2f, .2f, .2f);
+        glUniformMatrix4fv(g_model_uniform,1,GL_FALSE,glm::value_ptr(model));
+        glUniform1i(g_object_id_uniform,ARROW1);
+        DrawVirtualObject("object_0");
+  
 
-        // DESENHA MODELO ATUAL (lara2013)
+        
+    // DESENHA MODELO ATUAL (lara2013)
         for (int i = 12; i < 36; i++)
         {
             model = Matrix_Translate(-70.0f, 5.5f, -70.0f) * Matrix_Rotate_Z(g_AngleZ) * Matrix_Rotate_Y(g_AngleY-3.14f) * Matrix_Rotate_X(g_AngleX) * Matrix_Scale(ESCALALARAVELHA * 2, ESCALALARAVELHA * 2, ESCALALARAVELHA * 2);
@@ -1125,7 +1136,7 @@ void LoadShadersFromFiles()
     glUniform1i(glGetUniformLocation(g_GpuProgramID, "TextureImage28"), 28);
     glUniform1i(glGetUniformLocation(g_GpuProgramID, "TextureImage29"), 29);
     glUniform1i(glGetUniformLocation(g_GpuProgramID, "TextureImage30"), 30);
-
+    glUniform1i(glGetUniformLocation(g_GpuProgramID, "TextureImage31"),31);
     glUseProgram(0);
 }
 

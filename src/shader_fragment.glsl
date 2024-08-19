@@ -55,6 +55,8 @@ uniform mat4 projection;
 #define SHADLARANOVA 33
 #define SOBRANCELHALARANOVA 34
 #define CALCA2LARANOVA 35
+#define ARROW1 36
+
 
 //#define LARAATUAL 999
 
@@ -97,6 +99,7 @@ uniform sampler2D TextureImage27;
 uniform sampler2D TextureImage28;
 uniform sampler2D TextureImage29;
 uniform sampler2D TextureImage30;
+uniform sampler2D TextureImage31;
 
 
 // O valor de saída ("out") de um Fragment Shader é a cor final do fragmento.
@@ -297,7 +300,7 @@ if ( object_id == MURO)
         Ka = vec3(1,1,1);
         q = 60;
    }
-   for (int i = 12; i < 36; i++)
+   for (int i = 12; i < 39; i++)
    {
     /*float minx = bbox_min.x;
         float maxx = bbox_max.x;
@@ -371,6 +374,7 @@ if ( object_id == MURO)
     vec3 Kd28 = texture(TextureImage28, vec2(U,V)).rgb;
     vec3 Kd29 = texture(TextureImage29, vec2(U,V)).rgb;
     vec3 Kd30 = texture(TextureImage30, vec2(U,V)).rgb;
+    vec3 Kd31 = texture(TextureImage31, vec2(U,V)).rgb;
 
     // Equação de Iluminação
     float lambert = max(0,dot(n,l));
@@ -450,6 +454,10 @@ if ( object_id == MURO)
                                                     color.rgb = Kd29 *(lambert +0.01);
                                                     else if (object_id == SOBRANCELHALARANOVA)
                                                     color.rgb = Kd30 *(lambert +0.01);
+                                                    else if (object_id == ARROW1)
+                                                    color.rgb = Kd31 *(lambert + 0.01);
+                                                   
+
                                                     else
                                                         color.rgb = ambient_term;
                                                         // Cor final com correção gamma, considerando monitor sRGB.
