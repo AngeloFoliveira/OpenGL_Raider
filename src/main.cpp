@@ -152,6 +152,8 @@ void MouseButtonCallback(GLFWwindow *window, int button, int action, int mods);
 void CursorPosCallback(GLFWwindow *window, double xpos, double ypos);
 void ScrollCallback(GLFWwindow *window, double xoffset, double yoffset);
 
+
+
 // Definimos uma estrutura que armazenará dados necessários para renderizar
 // cada objeto da cena virtual.
 struct SceneObject
@@ -239,13 +241,27 @@ bool tecla_A_pressionada = false;
 bool tecla_S_pressionada = false;
 bool tecla_D_pressionada = false;
 bool tecla_Q_pressionada = false;
-
+bool tecla_Enter_pressionada= false;
 // globais para uso da camera livre
 float g_Theta = 3.141592f / 4;
 float g_Phi = 3.141592f / 6;
 float xl = -5.0;
 float yl = 0.0;
 float zl = -5.0;
+
+//
+glm::vec3 bezierQuadratic(float t, const glm::vec3& p0, const glm::vec3& p1, const glm::vec3& p2) {
+    float u = 1 - t;
+    float tq = t * t;
+    float uq = u * u;
+    glm::vec3 p = uq * p0;
+    p += 2 * u * t * p1;   
+    p += tq * p2;
+    tecla_Enter_pressionada=false;
+    return p;
+}
+
+
 
 glm::vec4 camera_position_c = glm::vec4(75.0f, 5.0f, 75.0f, 1.0f); // Ponto "c", centro da câmera
 glm::vec4 camera_position_c_aux;
@@ -356,7 +372,8 @@ int main(int argc, char *argv[])
     LoadTextureImage("../../data/lara2013/rosto.png");       // Textureimage28
     LoadTextureImage("../../data/lara2013/shad.png");        // Textureimage29
     LoadTextureImage("../../data/lara2013/sobrancelha.png"); // Textureimage30
-
+    LoadTextureImage("../../data/arrow/arrow.jpeg");
+  
     ObjModel planemodel("../../data/plane.obj");
     ComputeNormals(&planemodel);
     BuildTrianglesAndAddToVirtualScene(&planemodel);
@@ -385,6 +402,9 @@ int main(int argc, char *argv[])
     ComputeNormals(&laranova);
     BuildTrianglesAndAddToVirtualScene(&laranova);
 
+    ObjModel arrow("../../data/arrow/model.obj");
+    ComputeNormals(&arrow);
+    BuildTrianglesAndAddToVirtualScene(&arrow);
     // PrintObjModelInfo(&muro);
 
     if (argc > 1)
@@ -415,6 +435,7 @@ int main(int argc, char *argv[])
 
         // Definimos a cor do "fundo" do framebuffer como branco.  Tal cor é
         // definida como coeficientes RGBA: Red, Green, Blue, Alpha; isto é:
+
         // Vermelho, Verde, Azul, Alpha (valor de transparência).
         // Conversaremos sobre sistemas de cores nas aulas de Modelos de Iluminação.
         //
@@ -609,7 +630,7 @@ int main(int argc, char *argv[])
 #define SHADLARANOVA 33
 #define SOBRANCELHALARANOVA 34
 #define CALCA2LARANOVA 35
-
+#define ARROW1 36
 #define ESCALALARAVELHA 3
 #define ALTURAMURO 20
 
@@ -849,8 +870,23 @@ int main(int argc, char *argv[])
         {
             ESTATUA_DESVENDADA = true;
         }
+     
+    if(tecla_Enter_pressionada){
+        glm::vec3 p0(xl, yl, zl);
+        glm::vec3 p1(xl, yl-0.5f, zl+5.0f);
+        glm::vec3 p2(xl, yl-1.0, zl+10.0f);
+        float current_time = (float)glfwGetTime();
+        float mov=+current_time*1.5;
+        float move=fmod(mov,1.0);
+        glm::vec3 position = bezierQuadratic(move, p0, p1, p2);
+        model= Matrix_Translate(position.x,position.y,position.z*camera_view_vector[2]) * Matrix_Rotate_X(-3.14 / 2) * Matrix_Scale(.2f, .2f, .2f);
+        glUniformMatrix4fv(g_model_uniform,1,GL_FALSE,glm::value_ptr(model));
+        glUniform1i(g_object_id_uniform,ARROW1);
+        DrawVirtualObject("object_0");
 
-        // DESENHA MODELO ATUAL (lara2013)
+    }
+        
+    // DESENHA MODELO ATUAL (lara2013)
         for (int i = 12; i < 36; i++)
         {
             model = Matrix_Translate(-70.0f, 5.5f, -70.0f) * Matrix_Rotate_Z(g_AngleZ) * Matrix_Rotate_Y(g_AngleY - 3.14f) * Matrix_Rotate_X(g_AngleX) * Matrix_Scale(ESCALALARAVELHA * 2, ESCALALARAVELHA * 2, ESCALALARAVELHA * 2);
@@ -1315,7 +1351,7 @@ void LoadShadersFromFiles()
     glUniform1i(glGetUniformLocation(g_GpuProgramID, "TextureImage28"), 28);
     glUniform1i(glGetUniformLocation(g_GpuProgramID, "TextureImage29"), 29);
     glUniform1i(glGetUniformLocation(g_GpuProgramID, "TextureImage30"), 30);
-
+    glUniform1i(glGetUniformLocation(g_GpuProgramID, "TextureImage31"),31);
     glUseProgram(0);
 }
 
@@ -1962,7 +1998,9 @@ void KeyCallback(GLFWwindow *window, int key, int scancode, int action, int mod)
         g_TorsoPositionX = 0.0f;
         g_TorsoPositionY = 0.0f;
     }
-
+    if(key == GLFW_KEY_ENTER && action == GLFW_REPEAT){
+      tecla_Enter_pressionada= true;
+  }
     // Se o usuário apertar a tecla P, utilizamos projeção perspectiva.
     if (key == GLFW_KEY_P && action == GLFW_PRESS)
     {
@@ -2129,7 +2167,6 @@ void TextRendering_ShowFramesPerSecond(GLFWwindow *window)
 
     TextRendering_PrintString(window, buffer, 1.0f - (numchars + 1) * charwidth, 1.0f - lineheight, 1.0f);
 }
-
 // geométrico carregado de um arquivo ".obj".
 // Veja: https://github.com/syoyo/tinyobjloader/blob/22883def8db9ef1f3ffb9b404318e7dd25fdbb51/loader_example.cc#L98
 void PrintObjModelInfo(ObjModel *model)
