@@ -3,7 +3,7 @@
 
 namespace collisions
 {
-
+    //FONTE CHATGPT
     bool checkCollisionCubePlane(CUBE &cube, PLANe &plane)
     {
         // Checar se o plano colide com o cubo
@@ -31,7 +31,7 @@ namespace collisions
         // Se há vértices na frente e atrás do plano, há colisão
         return front > 0 && back > 0;
     }
-
+    //FONTE CHATGPT
     bool checkCollisionWithWalls(CUBE &lara1996)
     {
         // Definição das paredes
@@ -50,7 +50,7 @@ namespace collisions
         }
         return false;
     }
-
+    //FONTE CHATGPT
     bool checkCollisionCubeSphere(CUBE &cube, SPHERE &sphere)
     {
         // Encontra o ponto mais próximo no cubo ao centro da esfera
@@ -67,7 +67,7 @@ namespace collisions
         // Se a distância for menor ou igual ao raio, há colisão
         return distance <= sphere.radius;
     }
-
+    //FONTE CHATGPT
     bool checkCollisionCubeCube(CUBE &cube1, CUBE &cube2)
     {
         // Checa se há sobreposição em todos os eixos
