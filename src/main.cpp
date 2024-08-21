@@ -255,7 +255,7 @@ glm::vec3 bezierQuadratic(float t, const glm::vec3& p0, const glm::vec3& p1, con
     float tq = t * t;
     float uq = u * u;
     glm::vec3 p = uq * p0;
-    p += 2 * u * t * p1;   
+    p += 2 * u * t * p1;
     p += tq * p2;
     tecla_Enter_pressionada=false;
     return p;
@@ -373,7 +373,7 @@ int main(int argc, char *argv[])
     LoadTextureImage("../../data/lara2013/shad.png");        // Textureimage29
     LoadTextureImage("../../data/lara2013/sobrancelha.png"); // Textureimage30
     LoadTextureImage("../../data/arrow/arrow.jpeg");
-  
+
     ObjModel planemodel("../../data/plane.obj");
     ComputeNormals(&planemodel);
     BuildTrianglesAndAddToVirtualScene(&planemodel);
@@ -499,7 +499,7 @@ int main(int argc, char *argv[])
             // Abaixo definimos as varáveis que efetivamente definem a câmera virtual.
             // Veja slides 195-227 e 229-234 do documento Aula_08_Sistemas_de_Coordenadas.pdf.
             glm::vec4 camera_position_c = glm::vec4(x + xl, y + yl, z + zl, 1.0f); // Ponto "c", centro da câmera
-            glm::vec4 camera_position_c_aux;
+            glm::vec4 mera_position_c_aux;
             glm::vec4 last_cam_pos = camera_position_c;
 
             glm::vec4 camera_lookat_l = glm::vec4(xl, yl, zl, 1.0f);        // Ponto "l", para onde a câmera (look-at) estará sempre olhando
@@ -870,13 +870,13 @@ int main(int argc, char *argv[])
         {
             ESTATUA_DESVENDADA = true;
         }
-     
+
     if(tecla_Enter_pressionada){
         glm::vec3 p0(xl, yl, zl);
-        glm::vec3 p1(xl, yl-0.5f, zl+5.0f);
-        glm::vec3 p2(xl, yl-1.0, zl+10.0f);
+        glm::vec3 p1(xl, yl-1.0f, zl+5.0f);
+        glm::vec3 p2(xl, yl-4.0, zl+10.0f);
         float current_time = (float)glfwGetTime();
-        float mov=+current_time*1.5;
+        float mov=+current_time*1.0;
         float move=fmod(mov,1.0);
         glm::vec3 position = bezierQuadratic(move, p0, p1, p2);
         model= Matrix_Translate(position.x,position.y,position.z*camera_view_vector[2]) * Matrix_Rotate_X(-3.14 / 2) * Matrix_Scale(.2f, .2f, .2f);
@@ -885,10 +885,11 @@ int main(int argc, char *argv[])
         DrawVirtualObject("object_0");
 
     }
-        
+
     // DESENHA MODELO ATUAL (lara2013)
         for (int i = 12; i < 36; i++)
         {
+          if(ESTATUA_DESVENDADA&&DENTE_DESVENDADO&&CRANIO_DESVENDADO){
             model = Matrix_Translate(-70.0f, 5.5f, -70.0f) * Matrix_Rotate_Z(g_AngleZ) * Matrix_Rotate_Y(g_AngleY - 3.14f) * Matrix_Rotate_X(g_AngleX) * Matrix_Scale(ESCALALARAVELHA * 2, ESCALALARAVELHA * 2, ESCALALARAVELHA * 2);
             glUniformMatrix4fv(g_model_uniform, 1, GL_FALSE, glm::value_ptr(model));
 
@@ -1011,10 +1012,10 @@ int main(int argc, char *argv[])
             {
                 glUniform1i(g_object_id_uniform, i);
                 DrawVirtualObject("calca2");
-            }
+            }}
         }
 
-        
+
         collisions::CUBE parede0;
         parede0.min = glm::vec4(55.0f,-2.0f,20.0f,1.0f);
         parede0.max = glm::vec4(70.0f,18.0f,70.0f,1.0f);
