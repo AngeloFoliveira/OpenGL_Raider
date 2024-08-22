@@ -27,6 +27,6 @@
 <p>Uso de chatgpt ou outras ferramentas similar: usamos o chatgpt para implementar parte dos tipos de colisões.
     Para curvas de bezier o chat gpt foi utilizado apenas para visualização do algoritmo, as funções foram implementadas do zero. Comentários sobre uso: 
  <p> André: eu creio que apesar de não ter recorrido tanto ao chat gpt e ferramentas simiilares, não posso negar que na parte de como implementar curvas de bezier ele me ajudou a enxergar como deveria ficar o código
- <p> Angelo: o chatgpt foi (mais do que o esperado) muito útil na maioria das funções de colisão.
+ <p> Angelo: o chatgpt foi (mais do que o esperado) muito útil na maioria das funções de colisão, das cinco funções presentes, quatro foram feitas por ele.
 
 ![image](https://github.com/user-attachments/assets/c293e3cf-75e7-49a6-9375-8ba39f1e00db)
